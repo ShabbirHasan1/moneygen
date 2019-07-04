@@ -2,3 +2,7 @@
 chromedriver
 DataFiles/
 Downloads/
+**/__pycache__/**
+**/*.csv
+**/skip_list.txt
+**/.DS_Store
