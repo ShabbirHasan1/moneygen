@@ -1,16 +1,16 @@
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.select import Select
-from selenium.webdriver.chrome.options import Options  
+from selenium import web__driver
+from selenium.web__driver.common.keys import Keys
+from selenium.web__driver.support.select import Select
+from selenium.web__driver.chrome.options import Options  
 from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
+from selenium.web__driver.support.ui import Web__DriverWait
+from selenium.web__driver.support import expected_conditions as EC
+from selenium.web__driver.common.by import By
 from config import Config
 
 class SeleniumDispatcher:
     def __init__(self, headless: bool = False, download_path: str = None):
-        # Selenium driver options for chrome
+        # Selenium __driver options for chrome
         options = Options() 
         # Enable downloads if download_path is provided
         if download_path:
@@ -29,11 +29,11 @@ class SeleniumDispatcher:
         if headless:
             options.add_argument("--headless")
 
-        self.driver = webdriver.Chrome(executable_path = Config.SELENIUM_DRIVER_EXEC_PATH, chrome_options = options)
-        self.driver.command_executor._commands["send_command"] = ("POST", '/session/$sessionId/chromium/send_command')
+        self.__driver = webdriver.Chrome(executable_path = Config.SELENIUM___DRIVER_EXEC_PATH, chrome_options = options)
+        self.__driver.command_executor._commands["send_command"] = ("POST", '/session/$sessionId/chromium/send_command')
 
         if download_path:
-            self.driver.execute("send_command", params)
+            self.__driver.execute("send_command", params)
 
     def get_driver(self):
-        return self.driver
+        return self.__driver
