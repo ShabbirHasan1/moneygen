@@ -1,5 +1,5 @@
 from selenium_dispatcher import SeleniumDispatcher
 
-driver = SeleniumDispatcher(download_path='downloads').driver()
+driver = SeleniumDispatcher(download_path='downloads', headless=False).get_driver()
 
-driver.get('www.google.com')
+driver.get('https://www.google.com')
