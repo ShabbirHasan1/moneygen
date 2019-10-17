@@ -10,8 +10,6 @@ from config import Config
 
 class SeleniumDispatcher:
     def __init__(self, headless: bool = False, download_path: str = None):
-        # set a self variable with selenium instance
-        # if download dir, enable downloads in specified directory
         # Selenium driver options for chrome
         options = Options() 
         # Enable downloads if download_path is provided
