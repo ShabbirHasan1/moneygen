@@ -1,5 +1,4 @@
-from selenium_dispatcher import SeleniumDispatcher
+from index_derivative_historical import IndexDerivativeHistorical
 
-driver = SeleniumDispatcher(download_path='downloads', headless=False).get_driver()
-
-driver.get('https://www.google.com')
+derivativeHistorical = IndexDerivativeHistorical('BANKNIFTY', 'FUTURES', '16-OCT-2019')
+del derivativeHistorical

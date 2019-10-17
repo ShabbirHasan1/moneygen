@@ -1,11 +1,11 @@
-from selenium import web__driver
-from selenium.web__driver.common.keys import Keys
-from selenium.web__driver.support.select import Select
-from selenium.web__driver.chrome.options import Options  
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.select import Select
+from selenium.webdriver.chrome.options import Options  
 from selenium.common.exceptions import TimeoutException
-from selenium.web__driver.support.ui import Web__DriverWait
-from selenium.web__driver.support import expected_conditions as EC
-from selenium.web__driver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 from config import Config
 
 class SeleniumDispatcher:
@@ -29,7 +29,7 @@ class SeleniumDispatcher:
         if headless:
             options.add_argument("--headless")
 
-        self.__driver = webdriver.Chrome(executable_path = Config.SELENIUM___DRIVER_EXEC_PATH, chrome_options = options)
+        self.__driver = webdriver.Chrome(executable_path = Config.SELENIUM_DRIVER_EXEC_PATH, chrome_options = options)
         self.__driver.command_executor._commands["send_command"] = ("POST", '/session/$sessionId/chromium/send_command')
 
         if download_path:
@@ -37,3 +37,6 @@ class SeleniumDispatcher:
 
     def get_driver(self):
         return self.__driver
+
+    def __del__(self):
+        self.__driver.close()
