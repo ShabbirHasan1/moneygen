@@ -8,6 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from config import Config
 
+
 class SeleniumDispatcher:
     def __init__(self, headless: bool = False, download_path: str = None):
         # Selenium __driver options for chrome

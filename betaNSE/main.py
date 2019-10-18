@@ -1,4 +1,9 @@
 from index_derivative_historical import IndexDerivativeHistorical
 
-derivativeHistorical = IndexDerivativeHistorical('BANKNIFTY', 'FUTURES', '16-OCT-2019')
-del derivativeHistorical
+derivative_historical_options = IndexDerivativeHistorical('BANKNIFTY')
+derivative_historical_options.get_available_years()
+derivative_historical_options.get_available_expiry_dates()
+derivative_historical_options.get_available_strike_prices(option_type='Call')
+derivative_historical_options.get_available_strike_prices(option_type='Put')
+derivative_historical_options.get_data_for_each_strike_price()
+del derivative_historical_options
