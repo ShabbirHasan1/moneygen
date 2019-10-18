@@ -65,11 +65,11 @@ class IndexDerivativeHistoricalOptions(IndexDerivativeHistorical):
                 time.sleep(Config.SLEEP_DURATION)
                 strike_price_select_element = self.driver.find_element_by_xpath("//div[@id='eq-derivatives-historical-strikePrice']/select")
                 self.year_expiry_type_strike_dict[year][expiry_date] = strike_price_select_element.text.split('\n')[2:]
-                print(self.year_expiry_type_strike_dict)
+        print('Strike prices fetch for "', option_type, '" option complete')
         
 
     def get_data_for_each_strike_price(self):
-        pass
+        self.driver.find_element_by_xpath('//a[@data_val="1Y"]').click()
     
 
     def __del__(self):
