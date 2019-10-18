@@ -2,3 +2,4 @@ downloads/
 **/__pycache__/
 chromedriver/
 .vscode/
+env/
