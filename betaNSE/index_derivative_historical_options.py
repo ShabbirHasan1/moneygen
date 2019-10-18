@@ -19,15 +19,8 @@ class IndexDerivativeHistoricalOptions(IndexDerivativeHistorical):
     def __init__(self, symbol_name : str):
         super().__init__(symbol_name)
 
-        # Click on 'All Historical Data'
-        self.driver.find_element_by_link_text('All Historical Data').click()
-
-        # Get instrument types from config
-        self.instrument_types = Config.INSTRUMENT_TYPES
-
         ### Get filtering information for OPTIONS
         # Select instrument specified in method params
-        time.sleep(Config.SLEEP_DURATION + 8)
         instrument_types_select_element = self.driver.find_element_by_xpath("//div[@id='eq-derivatives-historical-instrumentType']/select")
         # print(instrument_types_select_element.text)
         instrument_types_selector = Select(instrument_types_select_element)

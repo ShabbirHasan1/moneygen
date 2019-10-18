@@ -7,3 +7,9 @@ class IndexDerivativeHistorical:
         self.driver = SeleniumDispatcher().get_driver()
         self.driver.get(Config.HISTORICAL_DERIVATIVE_DATA_URL + symbol_name.upper())
         time.sleep(Config.SLEEP_DURATION)
+        # Click on 'All Historical Data'
+        self.driver.find_element_by_link_text('All Historical Data').click()
+
+        # Get instrument types from config
+        self.instrument_types = Config.INSTRUMENT_TYPES
+        time.sleep(Config.SLEEP_DURATION + 8)
