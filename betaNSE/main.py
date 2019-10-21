@@ -1,4 +1,5 @@
-from index_derivative_historical_options import IndexDerivativeHistoricalOptions
+from index_derivative_historical_options \
+    import IndexDerivativeHistoricalOptions
 
 derivative_historical_options = IndexDerivativeHistoricalOptions('BANKNIFTY')
 derivative_historical_options.get_available_years()
