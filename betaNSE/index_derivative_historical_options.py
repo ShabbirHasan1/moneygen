@@ -69,7 +69,7 @@ class IndexDerivativeHistoricalOptions(IndexDerivativeHistorical):
         for year in self.options_expiry_dates.keys():
             Select(date_select_element).select_by_visible_text(year)
             time.sleep(Config.SLEEP_DURATION)
-            self.year_expiry_type_strike_dict[year] = dict()
+            self.year_expiry_type_strike_dict[option_type][year] = dict()
             for expiry_date in self.options_expiry_dates[year]:
                 expiry_date_select_element = self.driver.\
                     find_element_by_xpath(
@@ -91,12 +91,54 @@ class IndexDerivativeHistoricalOptions(IndexDerivativeHistorical):
                         "//div[@id='eq-derivatives-historical-strikePrice']/"
                         + "select"
                     )
-                self.year_expiry_type_strike_dict[year][expiry_date] = \
+                self.year_expiry_type_strike_dict[option_type][year][expiry_date] = \
                     strike_price_select_element.text.split('\n')[2:]
         print('Strike prices fetch for "', option_type, '" option complete')
 
-    def get_data_for_each_strike_price(self):
+    def download_data_for_each_strike_price(self):
+        print(self.year_expiry_type_strike_dict)
         self.driver.find_element_by_xpath('//a[@data_val="1Y"]').click()
+        instrument_types_select_element = self.driver.find_element_by_xpath(
+                "//div[@id='eq-derivatives-historical-instrumentType']/select"
+            )
+        # print(instrument_types_select_element.text)
+        instrument_types_selector = Select(instrument_types_select_element)
+        instrument_types_selector.select_by_visible_text(
+                self.instrument_types['OPTIONS']
+            )
+        time.sleep(Config.SLEEP_DURATION)
+        date_select_element = self.driver.find_element_by_xpath(
+                "//div[@id='eq-derivatives-historical-year']/select"
+            )
+        self.driver.find_element_by_xpath("//a[@data-val='1Y']").click()
+        for year in self.year_expiry_type_strike_dict[option_type].keys():
+            Select(date_select_element).select_by_visible_text(year)
+            time.sleep(Config.SLEEP_DURATION)
+            for expiry_date in self.year_expiry_type_strike_dict[option_type][year].keys():
+                expiry_date_select_element = self.driver.\
+                    find_element_by_xpath(
+                        "//div[@id='eq-derivatives-historical-expiryDate']/"
+                        + "select"
+                    )
+                Select(expiry_date_select_element).select_by_visible_text(
+                    expiry_date)
+                time.sleep(Config.SLEEP_DURATION)
+                option_type_select_element = self.driver.find_element_by_xpath(
+                    "//div[@id='eq-derivatives-historical-optionType']/select"
+                    )
+                Select(option_type_select_element).select_by_visible_text(
+                    option_type
+                    )
+                time.sleep(Config.SLEEP_DURATION)
+                strike_price_select_element = self.driver.\
+                    find_element_by_xpath(
+                        "//div[@id='eq-derivatives-historical-strikePrice']/"
+                        + "select"
+                    )
+                Select(strike_price_select_element).select_by_visible_text(self.year_expiry_type_strike_dict[option_type][year])
+                self.driver.find_elements_by_xpath("//div[@class='xlsdownload']/a").click()
+
+
 
     def __del__(self):
         self.driver.close()
