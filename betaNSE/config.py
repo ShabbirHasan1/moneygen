@@ -10,3 +10,4 @@ class Config(object):
         'https://beta.nseindia.com/get-quotes/derivatives?symbol='
     SLEEP_DURATION = 2
     INSTRUMENT_TYPES = {'OPTIONS': 'Index Options', 'FUTURES': 'Index Futures'}
+    DOWNLOAD_LOCATION = '/Users/mayank.gupta/Moneygen/betaNSE/downloads'

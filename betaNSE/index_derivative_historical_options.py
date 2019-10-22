@@ -46,6 +46,7 @@ class IndexDerivativeHistoricalOptions(IndexDerivativeHistorical):
                 "//div[@id='eq-derivatives-historical-year']/select"
             )
         self.options_years = date_select_element.text.split('\n')[1:]
+        print('Total option years:', date_select_element.text)
         print('COMPLETE')
 
     def get_available_expiry_dates(self):
@@ -141,10 +142,15 @@ class IndexDerivativeHistoricalOptions(IndexDerivativeHistorical):
                         "//div[@id='eq-derivatives-historical-strikePrice']/"
                         + "select"
                     )
-                for strike_price in self.year_expiry_type_strike_dict[option_type][year][expiry_date]:
-                    print('Selected strike price:', strike_price)
-                    Select(strike_price_select_element).select_by_visible_text(strike_price)
-                    self.driver.find_element_by_xpath("//div[@class='xlsdownload']/a").click()
+                try:
+                    for strike_price in self.year_expiry_type_strike_dict[option_type][year][expiry_date]:
+                        print('Selected strike price, expiry, option:', strike_price, expiry_date, option_type)
+                        Select(strike_price_select_element).select_by_visible_text(strike_price)
+                        time.sleep(1)
+                        self.driver.find_element_by_xpath("//div[@class='xlsdownload']/a").click()
+                except Exception:
+                    print('Error occured, trying from last checkpoint')
+                    self.download_data_for_each_strike_price(option_type)
         print('COMPLETE')
 
 
