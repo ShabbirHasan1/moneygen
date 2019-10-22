@@ -14,5 +14,4 @@ class IndexDerivativeHistorical:
         self.driver.find_element_by_link_text('All Historical Data').click()
 
         # Get instrument types from config
-        self.instrument_types = Config.INSTRUMENT_TYPES
         time.sleep(Config.SLEEP_DURATION + 8)

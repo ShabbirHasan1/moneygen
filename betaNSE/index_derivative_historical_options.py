@@ -3,6 +3,10 @@ from selenium_dispatcher import SeleniumDispatcher
 from selenium.webdriver.support.select import Select
 from index_derivative_historical import IndexDerivativeHistorical
 from config import Config
+import wget
+from datetime import datetime
+from datetime import timedelta
+import os
 
 
 class IndexDerivativeHistoricalOptions(IndexDerivativeHistorical):
@@ -20,7 +24,9 @@ class IndexDerivativeHistoricalOptions(IndexDerivativeHistorical):
     def __init__(self, symbol_name: str):
         print('Initialising IndexDerivativeHistoricalOptions')
         super().__init__(symbol_name)
-
+        self.instrument_type = Config.INSTRUMENT_TYPES['OPTIONS']
+        self.instrument_type_value = Config.INSTRUMENT_TYPES_VALUES[self.instrument_type]
+        self.symbol_name = symbol_name
         # Get filtering information for OPTIONS
         # Select instrument specified in method params
         instrument_types_select_element = self.driver.find_element_by_xpath(
@@ -29,10 +35,10 @@ class IndexDerivativeHistoricalOptions(IndexDerivativeHistorical):
         # print(instrument_types_select_element.text)
         instrument_types_selector = Select(instrument_types_select_element)
         instrument_types_selector.select_by_visible_text(
-                self.instrument_types['OPTIONS']
+                self.instrument_type
             )
         time.sleep(Config.SLEEP_DURATION)
-        print('Instrument type selected: ', self.instrument_types['OPTIONS'])
+        print('Instrument type selected: ', self.instrument_type)
 
         # Dictonary to store year, expiry date of each year,
         # and strike prices for each option (call, put) wrt each expiry date
@@ -102,7 +108,7 @@ class IndexDerivativeHistoricalOptions(IndexDerivativeHistorical):
                     strike_price_select_element.text.split('\n')[2:]
         print('COMPLETE!')
 
-    def download_data_for_each_strike_price(self, option_type):
+    def __download_data_for_each_strike_price(self, option_type):
         print('Downoading data for each strike price')
         # print(self.year_expiry_type_strike_dict['Put'])
         self.driver.find_element_by_xpath('//a[@data-val="1Y"]').click()
@@ -153,7 +159,37 @@ class IndexDerivativeHistoricalOptions(IndexDerivativeHistorical):
                     self.download_data_for_each_strike_price(option_type)
         print('COMPLETE')
 
-
+    def download_data_for_each_strike_price(self, option_type):
+        option_type_val = Config.OPTIONS_TYPES[option_type]
+        now_time = datetime.now()
+        to_date_string = now_time.strftime("%d-%m-%Y")
+        year_back_time = now_time - timedelta(days=365)
+        from_date_string = year_back_time.strftime("%d-%m-%Y")
+        for year in self.year_expiry_type_strike_dict[option_type].keys():
+            for expiry_date in self.year_expiry_type_strike_dict[option_type][year].keys():
+                for strike_price in self.year_expiry_type_strike_dict[option_type][year][expiry_date]:
+                    if strike_price == '-':
+                        strike_price = '0'
+                    url = 'https://beta.nseindia.com/api/historical/fo/derivatives?&from=' + \
+                        from_date_string + \
+                        '&to=' + \
+                        to_date_string + \
+                        '&optionType=' + \
+                        option_type_val + \
+                        '&strikePrice=' + \
+                        strike_price.split('.')[0] + \
+                        '&expiryDate=' + \
+                        expiry_date + \
+                        '&instrumentType=' + \
+                        self.instrument_type_value + \
+                        '&symbol=' + \
+                        self.symbol_name + \
+                        '&csv=true'
+                    print(url)
+                    wget.download(
+                        url=url,
+                        out=os.path.join(Config.DOWNLOAD_LOCATION, expiry_date+strike_price+option_type)
+                    )
 
     def __del__(self):
         self.driver.close()

@@ -11,3 +11,7 @@ class Config(object):
     SLEEP_DURATION = 2
     INSTRUMENT_TYPES = {'OPTIONS': 'Index Options', 'FUTURES': 'Index Futures'}
     DOWNLOAD_LOCATION = '/Users/mayank.gupta/Moneygen/betaNSE/downloads'
+    OPTIONS_TYPES = {'Call': 'CE', 'Put': 'PE'}
+    DOWNLOAD_DATE_RANGE_FORMAT = 'DD-MM-YYYY'
+    EXPIRY_DATE_FORMAT = 'DD-MMM-YYYY'
+    INSTRUMENT_TYPES_VALUES = {'Index Options': 'OPTIDX', 'Index Futures': 'FUTIDX'}
