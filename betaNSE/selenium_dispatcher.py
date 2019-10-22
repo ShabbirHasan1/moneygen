@@ -15,6 +15,7 @@ class SeleniumDispatcher:
         options = Options() 
         # Enable downloads if download_path is provided
         if download_path:
+            print('Download is turned on')
             options.add_experimental_option("prefs", {
             "download.default_directory": download_path,
             "download.prompt_for_download": False,

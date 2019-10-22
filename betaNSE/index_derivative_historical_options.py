@@ -18,6 +18,7 @@ class IndexDerivativeHistoricalOptions(IndexDerivativeHistorical):
         Symbol of the index.
     """
     def __init__(self, symbol_name: str):
+        print('Initialising IndexDerivativeHistoricalOptions')
         super().__init__(symbol_name)
 
         # Get filtering information for OPTIONS
@@ -36,16 +37,19 @@ class IndexDerivativeHistoricalOptions(IndexDerivativeHistorical):
         # Dictonary to store year, expiry date of each year,
         # and strike prices for each option (call, put) wrt each expiry date
         self.year_expiry_type_strike_dict = dict()
+        print('IndexDerivativeHistoricalOptions initialised!')
 
     def get_available_years(self):
+        print('Fetching available years')
         # Get all available years for OPTIONS contracts
         date_select_element = self.driver.find_element_by_xpath(
                 "//div[@id='eq-derivatives-historical-year']/select"
             )
         self.options_years = date_select_element.text.split('\n')[1:]
-        print('Available years fetch complete')
+        print('COMPLETE')
 
     def get_available_expiry_dates(self):
+        print('Fetching available expiry dates for each year')
         # Get all available 'Expiry Dates' for OPTIONS contracts
         self.options_expiry_dates = dict()
         date_select_element = self.driver.find_element_by_xpath(
@@ -61,6 +65,7 @@ class IndexDerivativeHistoricalOptions(IndexDerivativeHistorical):
         print('Available expiry dates fetch for each year complete')
 
     def get_available_strike_prices(self, option_type: str):
+        print('Getting available strike prices')
         # Get all available strike prices for CALL OPTIONS
         date_select_element = self.driver.find_element_by_xpath(
                 "//div[@id='eq-derivatives-historical-year']/select"
@@ -93,11 +98,12 @@ class IndexDerivativeHistoricalOptions(IndexDerivativeHistorical):
                     )
                 self.year_expiry_type_strike_dict[option_type][year][expiry_date] = \
                     strike_price_select_element.text.split('\n')[2:]
-        print('Strike prices fetch for "', option_type, '" option complete')
+        print('COMPLETE')
 
-    def download_data_for_each_strike_price(self):
-        print(self.year_expiry_type_strike_dict)
-        self.driver.find_element_by_xpath('//a[@data_val="1Y"]').click()
+    def download_data_for_each_strike_price(self, option_type):
+        print('Downoading data for each strike price')
+        # print(self.year_expiry_type_strike_dict['Put'])
+        self.driver.find_element_by_xpath('//a[@data-val="1Y"]').click()
         instrument_types_select_element = self.driver.find_element_by_xpath(
                 "//div[@id='eq-derivatives-historical-instrumentType']/select"
             )
@@ -110,7 +116,6 @@ class IndexDerivativeHistoricalOptions(IndexDerivativeHistorical):
         date_select_element = self.driver.find_element_by_xpath(
                 "//div[@id='eq-derivatives-historical-year']/select"
             )
-        self.driver.find_element_by_xpath("//a[@data-val='1Y']").click()
         for year in self.year_expiry_type_strike_dict[option_type].keys():
             Select(date_select_element).select_by_visible_text(year)
             time.sleep(Config.SLEEP_DURATION)
@@ -135,8 +140,11 @@ class IndexDerivativeHistoricalOptions(IndexDerivativeHistorical):
                         "//div[@id='eq-derivatives-historical-strikePrice']/"
                         + "select"
                     )
-                Select(strike_price_select_element).select_by_visible_text(self.year_expiry_type_strike_dict[option_type][year])
-                self.driver.find_elements_by_xpath("//div[@class='xlsdownload']/a").click()
+                for strike_price in self.year_expiry_type_strike_dict[option_type][year][expiry_date]:
+                    print('Selected strike price:', strike_price)
+                    Select(strike_price_select_element).select_by_visible_text(strike_price)
+                    self.driver.find_elements_by_xpath("//div[@class='xlsdownload']/a").click()
+        print('COMPLETE')
 
 
 
