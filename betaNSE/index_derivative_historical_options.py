@@ -62,7 +62,7 @@ class IndexDerivativeHistoricalOptions(IndexDerivativeHistorical):
                 find_element_by_xpath(
                     "//div[@id='eq-derivatives-historical-expiryDate']/select"
                 ).text.split('\n')[1:]
-        print('Available expiry dates fetch for each year complete')
+        print('COMPLETE!')
 
     def get_available_strike_prices(self, option_type: str):
         print('Getting available strike prices')
@@ -70,6 +70,7 @@ class IndexDerivativeHistoricalOptions(IndexDerivativeHistorical):
         date_select_element = self.driver.find_element_by_xpath(
                 "//div[@id='eq-derivatives-historical-year']/select"
             )
+
         self.year_expiry_type_strike_dict[option_type] = dict()
         for year in self.options_expiry_dates.keys():
             Select(date_select_element).select_by_visible_text(year)
@@ -98,7 +99,7 @@ class IndexDerivativeHistoricalOptions(IndexDerivativeHistorical):
                     )
                 self.year_expiry_type_strike_dict[option_type][year][expiry_date] = \
                     strike_price_select_element.text.split('\n')[2:]
-        print('COMPLETE')
+        print('COMPLETE!')
 
     def download_data_for_each_strike_price(self, option_type):
         print('Downoading data for each strike price')
@@ -143,7 +144,7 @@ class IndexDerivativeHistoricalOptions(IndexDerivativeHistorical):
                 for strike_price in self.year_expiry_type_strike_dict[option_type][year][expiry_date]:
                     print('Selected strike price:', strike_price)
                     Select(strike_price_select_element).select_by_visible_text(strike_price)
-                    self.driver.find_elements_by_xpath("//div[@class='xlsdownload']/a").click()
+                    self.driver.find_element_by_xpath("//div[@class='xlsdownload']/a").click()
         print('COMPLETE')
 
 
