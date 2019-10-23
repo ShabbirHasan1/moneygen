@@ -44,7 +44,8 @@ class IndexHistoricalOptions(IndexHistorical):
             return self.expiry_strike_price_map
         except Exception:
             self.get_expiries()
-            self.get_expiry_strike_price_map_for_all()
+            self.expiry_strike_price_map = self.get_strike_prices(self.expiries)
+            return self.expiry_strike_price_map
 
     def fetch_all_infos(self, expiry: str, strike_price: str):
         pass
