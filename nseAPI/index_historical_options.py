@@ -1,4 +1,5 @@
 from index_historical import IndexHistorical
+import requests
 
 
 class IndexHistoricalOptions(IndexHistorical):
@@ -9,7 +10,16 @@ class IndexHistoricalOptions(IndexHistorical):
         self.option_type_display_val = 'Index Options'
 
     def get_expiries(self):
-        pass
+        res = requests.get(
+            'https://nseindia.com/live_market/dynaContent/live_watch/get_quote/ajaxFOGetQuoteDataTest.jsp?i='\
+            + self.option_type\
+            + '&u='\
+            + self.symbol_name\
+            + '&e=&o=&k='
+        )
+        self.expiries = res.json()['expiries']
+        return self.expiries
+
 
     def get_strike_prices(self, expiries: list, option_type: str):
         pass
