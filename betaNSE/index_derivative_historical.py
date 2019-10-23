@@ -15,3 +15,7 @@ class IndexDerivativeHistorical:
 
         # Get instrument types from config
         time.sleep(Config.SLEEP_DURATION + 8)
+
+
+    def __del__(self):
+        self.driver.close()

@@ -195,4 +195,4 @@ class IndexDerivativeHistoricalOptions(IndexDerivativeHistorical):
                     )
 
     def __del__(self):
-        self.driver.close()
+        super().__del__()

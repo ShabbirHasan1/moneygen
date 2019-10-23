@@ -39,3 +39,5 @@ class SeleniumDispatcher:
 
     def get_driver(self):
         return self.__driver
+
+    
