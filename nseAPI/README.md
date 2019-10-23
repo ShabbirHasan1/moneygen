@@ -1,0 +1,1 @@
+# Get data through APIs instead of selenium webdriver
