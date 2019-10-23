@@ -1,5 +1,8 @@
 from index_historical import IndexHistorical
 import requests
+import wget
+from config import Config
+import os
 
 
 class IndexHistoricalOptions(IndexHistorical):
@@ -9,6 +12,8 @@ class IndexHistoricalOptions(IndexHistorical):
         self.derivative_type_val = 'OPTIDX'
         self.derivative_type_display_val = 'Index Options'
         self.option_type = option_type
+        self.expiries = None
+        self.expiry_strike_price_map = None
 
     def get_expiries(self):
         url = 'https://nseindia.com/live_market/dynaContent/live_watch/get_quote/ajaxFOGetQuoteDataTest.jsp?i='\
@@ -39,16 +44,43 @@ class IndexHistoricalOptions(IndexHistorical):
         return expiry_strike_price_map
 
     def get_expiry_strike_price_map_for_all(self):
-        try:
-            self.expiry_strike_price_map = self.get_strike_prices(self.expiries)
-            return self.expiry_strike_price_map
-        except Exception:
+        if self.expiries is None:
             self.get_expiries()
-            self.expiry_strike_price_map = self.get_strike_prices(self.expiries)
-            return self.expiry_strike_price_map
+        self.expiry_strike_price_map = self.get_strike_prices(self.expiries)
+        return self.expiry_strike_price_map
 
-    def fetch_all_infos(self, expiry: str, strike_price: str):
+    def get_info_specfic(self, expiry: str, strike_price: str):
         pass
 
-    def download_data(self, expiry: str, strike_price: str, option_type: str):
+    def get_info_all(self):
         pass
+
+    def download_data_specific(self, expiry: str, strike_price: str):
+        url = "https://nseindia.com/live_market/dynaContent/live_watch/get_quote/getFOHistoricalData.jsp"\
+                + "?underlying=" + self.symbol_name\
+                + '&instrument=' + self.derivative_type_val\
+                + '&expiry=' + expiry\
+                + '&type=' + self.option_type\
+                + '&strike=' + strike_price\
+                + "&fromDate=" + 'undefined'\
+                + "&toDate=" + 'undefined'\
+                + "&datePeriod=" + '3months'\
+                + "&fileDnld=" + 'undefined'
+        download_dir_path = os.path.join(Config.DOWNLOAD_DIRECTORY,self.derivative_type_val,self.option_type)
+        if not os.path.isdir(download_dir_path):
+            os.makedirs(download_dir_path)
+        download_file_path = os.path.join(download_dir_path, expiry + '_' + strike_price + '.csv')
+        # filename = wget.download(url=url, out=download_file_path)
+        res = requests.get(url, allow_redirects=True)
+        open(download_file_path, 'wb').write(res.content)
+        return download_file_path
+
+    def download_data_all(self):
+        if self.expiry_strike_price_map is None:
+            self.get_expiry_strike_price_map_for_all()
+        downloaded_files = list()
+        for expiry in self.expiry_strike_price_map.keys():
+            for strike_price in self.expiry_strike_price_map[expiry]:
+                filepath = self.download_data_specific(expiry, strike_price)
+                downloaded_files.append(filepath)
+        return filepath
