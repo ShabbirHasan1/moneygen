@@ -32,13 +32,10 @@ class SeleniumDispatcher:
             options.add_argument("--headless")
 
         self.__driver = webdriver.Chrome(executable_path = Config.SELENIUM_DRIVER_EXEC_PATH, chrome_options = options)
-        self.__driver.command_executor._commands["send_command"] = ("POST", '/session/$sessionId/chromium/send_command')
 
         if download_path:
+            self.__driver.command_executor._commands["send_command"] = ("POST", '/session/$sessionId/chromium/send_command')
             self.__driver.execute("send_command", params)
 
     def get_driver(self):
         return self.__driver
-
-    def __del__(self):
-        self.__driver.close()
