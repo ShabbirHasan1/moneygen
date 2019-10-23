@@ -188,7 +188,10 @@ class IndexDerivativeHistoricalOptions(IndexDerivativeHistorical):
                     print(url)
                     wget.download(
                         url=url,
-                        out=os.path.join(Config.DOWNLOAD_LOCATION, expiry_date+strike_price+option_type)
+                        out=os.path.join(
+                                Config.DOWNLOAD_LOCATION,
+                                expiry_date + '_' + strike_price + '_' + option_type + '.csv'
+                            )
                     )
 
     def __del__(self):
