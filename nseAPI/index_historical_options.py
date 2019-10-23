@@ -8,4 +8,17 @@ class IndexHistoricalOptions(IndexHistorical):
         self.option_type_val = 'OPTIDX'
         self.option_type_display_val = 'Index Options'
 
-    def
+    def get_expiries(self):
+        pass
+
+    def get_strike_prices(self, expiries: list, option_type: str):
+        pass
+
+    def get_expiry_strike_price_map(self, expiries: list):
+        pass
+
+    def fetch_all_infos(self, expiry: str, strike_price: str):
+        pass
+
+    def download_data(self, expiry: str, strike_price: str, option_type: str):
+        pass

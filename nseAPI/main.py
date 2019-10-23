@@ -1,7 +1,3 @@
 from index_historical_options import IndexHistoricalOptions
 
 index_historical_options = IndexHistoricalOptions('BANKNIFTY')
-expiries = index_historical_options.get_expiries()
-strike_prices = index_historical_options.get_strike_prices(expiries)
-expiry_strike_price_map = index_historical_options.get_expiry_strike_price_map(expiries)
-index_historical_options.fetch_all_infos(expiry_strike_price_map)
