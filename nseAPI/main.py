@@ -1,4 +1,6 @@
 from index_historical_options import IndexHistoricalOptions
 
-index_historical_options = IndexHistoricalOptions('BANKNIFTY', 'CE')
-print(index_historical_options.download_data_all())
+index_historical_options_call = IndexHistoricalOptions('BANKNIFTY', 'CE')
+print(index_historical_options_call.download_data_all())
+index_historical_options_put = IndexHistoricalOptions('BANKNIFTY', 'PE')
+print(index_historical_options_put.download_data_all())
