@@ -3,6 +3,7 @@ import requests
 import wget
 from config import Config
 import os
+from logger import Logger
 
 
 class IndexHistoricalOptions(IndexHistorical):
@@ -72,10 +73,12 @@ class IndexHistoricalOptions(IndexHistorical):
         download_file_path = os.path.join(download_dir_path, expiry + '_' + strike_price + '.csv')
         # filename = wget.download(url=url, out=download_file_path)
         res = requests.get(url, allow_redirects=True)
+        Logger.log(download_file_path)
         open(download_file_path, 'wb').write(res.content)
         return download_file_path
 
     def download_data_all(self):
+        Logger.log('Download started')
         if self.expiry_strike_price_map is None:
             self.get_expiry_strike_price_map_for_all()
         downloaded_files = list()
@@ -83,4 +86,5 @@ class IndexHistoricalOptions(IndexHistorical):
             for strike_price in self.expiry_strike_price_map[expiry]:
                 filepath = self.download_data_specific(expiry, strike_price)
                 downloaded_files.append(filepath)
-        return filepath
+        Logger.log('Download finished')
+        return downloaded_files
