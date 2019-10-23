@@ -165,6 +165,7 @@ class IndexDerivativeHistoricalOptions(IndexDerivativeHistorical):
         to_date_string = now_time.strftime("%d-%m-%Y")
         year_back_time = now_time - timedelta(days=365)
         from_date_string = year_back_time.strftime("%d-%m-%Y")
+        file_count = 0
         for year in self.year_expiry_type_strike_dict[option_type].keys():
             for expiry_date in self.year_expiry_type_strike_dict[option_type][year].keys():
                 for strike_price in self.year_expiry_type_strike_dict[option_type][year][expiry_date]:
@@ -177,7 +178,7 @@ class IndexDerivativeHistoricalOptions(IndexDerivativeHistorical):
                         '&optionType=' + \
                         option_type_val + \
                         '&strikePrice=' + \
-                        strike_price.split('.')[0] + \
+                        ''.join(strike_price.split('.')[0].split(',')) + \
                         '&expiryDate=' + \
                         expiry_date + \
                         '&instrumentType=' + \
@@ -193,6 +194,8 @@ class IndexDerivativeHistoricalOptions(IndexDerivativeHistorical):
                                 expiry_date + '_' + strike_price + '_' + option_type + '.csv'
                             )
                     )
+                    file_count = file_count + 1
+        print('File count is: ', file_count)
 
     def __del__(self):
         super().__del__()
