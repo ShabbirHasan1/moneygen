@@ -11,7 +11,7 @@ from seleniumwire import webdriver as wiredriver
 
 
 class SeleniumDispatcher:
-    def __init__(self, headless: bool = False, download_path: str = None, selenium_wire: bool = false):
+    def __init__(self, headless: bool = False, download_path: str = None, selenium_wire: bool = False):
         # Selenium __driver options for chrome
         options = Options() 
         # Enable downloads if download_path is provided

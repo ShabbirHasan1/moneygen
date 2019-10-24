@@ -4,7 +4,8 @@ import wget
 from config import Config
 import os
 from logger import Logger
-
+from selenium_dispatcher import SeleniumDispatcher
+import time
 
 class IndexHistoricalOptions(IndexHistorical):
     def __init__(self, symbol_name: str, option_type: str):
@@ -51,10 +52,48 @@ class IndexHistoricalOptions(IndexHistorical):
         return self.expiry_strike_price_map
 
     def get_info_specfic(self, expiry: str, strike_price: str):
-        pass
+        driver = SeleniumDispatcher(selenium_wire=True).get_driver()
+        url = 'https://nseindia.com/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying='\
+                + self.symbol_name\
+                + '&instrument=OPTIDX&type='\
+                + self.option_type\
+                + '&strike='\
+                + strike_price\
+                + '&expiry='\
+                + expiry
+        ajax_url = 'https://nseindia.com/live_market/dynaContent/live_watch/get_quote/ajaxFOGetQuoteJSON.jsp?underlying='\
+                + self.symbol_name\
+                + '&instrument=OPTIDX&expiry='\
+                + expiry\
+                + '&type='\
+                + self.option_type\
+                + '&strike='\
+                + strike_price
+        print(ajax_url)
+        driver.get(url)
+        time.sleep(4)
+
+        get_data_button = driver.find_element_by_xpath('//div/img[@src="/common/images/btn_go.gif"]')
+        # driver.execute_script("arguments[0].click();", get_data_button)
+        get_data_button.click()
+        for request in driver.requests:
+            if request.response:
+                if request.path == ajax_url:
+                    print(
+                        request.response.body
+                    )
+
+        driver.quit()
 
     def get_info_all(self):
-        pass
+        if self.expiry_strike_price_map is None:
+            self.get_expiry_strike_price_map_for_all()
+        infos = dict()
+        for expiry in self.expiry_strike_price_map.keys():
+            for strike_price in self.expiry_strike_price_map[expiry]:
+                info = self.get_info_specfic(expiry, strike_price)
+                infos[str(self.option_type+'_'+expiry+'_'+strike_price)] = info
+        return infos
 
     def download_data_specific(self, expiry: str, strike_price: str):
         url = "https://nseindia.com/live_market/dynaContent/live_watch/get_quote/getFOHistoricalData.jsp"\
