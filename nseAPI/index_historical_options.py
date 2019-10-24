@@ -6,6 +6,7 @@ import os
 from logger import Logger
 from selenium_dispatcher import SeleniumDispatcher
 import time
+from selenium.webdriver.common.action_chains import ActionChains
 
 class IndexHistoricalOptions(IndexHistorical):
     def __init__(self, symbol_name: str, option_type: str):
@@ -52,7 +53,7 @@ class IndexHistoricalOptions(IndexHistorical):
         return self.expiry_strike_price_map
 
     def get_info_specfic(self, expiry: str, strike_price: str):
-        driver = SeleniumDispatcher(selenium_wire=True).get_driver()
+        driver = SeleniumDispatcher(selenium_wire=True, headless=True).get_driver()
         url = 'https://nseindia.com/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying='\
                 + self.symbol_name\
                 + '&instrument=OPTIDX&type='\
@@ -71,19 +72,23 @@ class IndexHistoricalOptions(IndexHistorical):
                 + strike_price
         print(ajax_url)
         driver.get(url)
-        time.sleep(4)
 
-        get_data_button = driver.find_element_by_xpath('//div/img[@src="/common/images/btn_go.gif"]')
+        get_data_button = driver.find_element_by_xpath('//img[@src="/common/images/btn_go.gif"]')
         # driver.execute_script("arguments[0].click();", get_data_button)
-        get_data_button.click()
+        # get_data_button.click()
+        ActionChains(driver).move_to_element(get_data_button).click().perform()
+        time.sleep(1)
+        data = None
         for request in driver.requests:
             if request.response:
                 if request.path == ajax_url:
                     print(
                         request.response.body
                     )
+                    data = request.response.body
 
         driver.quit()
+        return data
 
     def get_info_all(self):
         if self.expiry_strike_price_map is None:
