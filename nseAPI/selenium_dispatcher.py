@@ -7,10 +7,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from config import Config
+from seleniumwire import webdriver as wiredriver
 
 
 class SeleniumDispatcher:
-    def __init__(self, headless: bool = False, download_path: str = None):
+    def __init__(self, headless: bool = False, download_path: str = None, selenium_wire: bool = false):
         # Selenium __driver options for chrome
         options = Options() 
         # Enable downloads if download_path is provided
@@ -30,8 +31,11 @@ class SeleniumDispatcher:
         options.add_argument("--start-maximized")
         if headless:
             options.add_argument("--headless")
-
-        self.__driver = webdriver.Chrome(executable_path = Config.SELENIUM_DRIVER_EXEC_PATH, chrome_options = options)
+        
+        if selenium_wire:
+            self.__driver = wiredriver.Chrome(executable_path = Config.SELENIUM_DRIVER_EXEC_PATH, chrome_options = options)
+        else:    
+            self.__driver = webdriver.Chrome(executable_path = Config.SELENIUM_DRIVER_EXEC_PATH, chrome_options = options)
 
         if download_path:
             self.__driver.command_executor._commands["send_command"] = ("POST", '/session/$sessionId/chromium/send_command')
