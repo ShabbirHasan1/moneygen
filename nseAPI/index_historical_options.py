@@ -7,6 +7,8 @@ from logger import Logger
 from selenium_dispatcher import SeleniumDispatcher
 import time
 from selenium.webdriver.common.action_chains import ActionChains
+import json
+
 
 class IndexHistoricalOptions(IndexHistorical):
     def __init__(self, symbol_name: str, option_type: str):
@@ -70,22 +72,21 @@ class IndexHistoricalOptions(IndexHistorical):
                 + self.option_type\
                 + '&strike='\
                 + strike_price
-        print(ajax_url)
+        logger.log(ajax_url)
         driver.get(url)
 
         get_data_button = driver.find_element_by_xpath('//img[@src="/common/images/btn_go.gif"]')
         # driver.execute_script("arguments[0].click();", get_data_button)
         # get_data_button.click()
+        # time.sleep(0.5)
         ActionChains(driver).move_to_element(get_data_button).click().perform()
         time.sleep(1)
         data = None
         for request in driver.requests:
             if request.response:
                 if request.path == ajax_url:
-                    print(
-                        request.response.body
-                    )
-                    data = request.response.body
+                    data = json.loads(request.response.body)
+                    logger.log(data)
 
         driver.quit()
         return data
