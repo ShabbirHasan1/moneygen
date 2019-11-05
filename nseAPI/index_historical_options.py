@@ -1,6 +1,5 @@
 from index_historical import IndexHistorical
 import requests
-import wget
 from config import Config
 import os
 from logger import Logger
@@ -72,7 +71,7 @@ class IndexHistoricalOptions(IndexHistorical):
                 + self.option_type\
                 + '&strike='\
                 + strike_price
-        logger.log(ajax_url)
+        Logger.log(ajax_url)
         driver.get(url)
 
         get_data_button = driver.find_element_by_xpath('//img[@src="/common/images/btn_go.gif"]')
@@ -86,7 +85,7 @@ class IndexHistoricalOptions(IndexHistorical):
             if request.response:
                 if request.path == ajax_url:
                     data = json.loads(request.response.body)
-                    logger.log(data)
+                    Logger.log(data)
 
         driver.quit()
         return data
