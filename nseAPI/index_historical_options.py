@@ -85,7 +85,7 @@ class IndexHistoricalOptions(IndexHistorical):
         for request in driver.requests:
             if request.response:
                 if request.path == ajax_url:
-                    data = json.loads(str(request.response.body))
+                    data = json.loads(request.response.body.decode("utf-8"))
                     Logger.log(data)
 
         driver.quit()
