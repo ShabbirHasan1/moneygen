@@ -54,7 +54,7 @@ class IndexHistoricalOptions(IndexHistorical):
         return self.expiry_strike_price_map
 
     def get_info_specfic(self, expiry: str, strike_price: str):
-        driver = SeleniumDispatcher(selenium_wire=True, headless=False).get_driver()
+        driver = SeleniumDispatcher(selenium_wire=True, headless=True).get_driver()
         url = 'https://nseindia.com/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying='\
                 + self.symbol_name\
                 + '&instrument=OPTIDX&type='\
