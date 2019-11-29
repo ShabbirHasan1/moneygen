@@ -1,4 +1,4 @@
-from index_historical_options import IndexHistoricalOptions
+from index_historical.index_historical_options import IndexHistoricalOptions
 
 index_historical_options_call = IndexHistoricalOptions('BANKNIFTY', 'CE')
 index_historical_options_call.get_info_all()
