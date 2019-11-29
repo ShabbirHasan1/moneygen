@@ -24,5 +24,9 @@ class EquityScraper(EquityScraperBase):
 
 
     def get_info_all(self, instruments: list):
-        pass
+        instrument_infos = dict()
+        for instrument in instruments:
+            instrument_info = self.get_info_specfic(instrument)
+            instrument_infos[instrument] = instrument_info
+        return instrument_infos
 
