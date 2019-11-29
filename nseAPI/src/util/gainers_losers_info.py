@@ -32,4 +32,12 @@ class GainersLosersInfo(object):
                 + self.view_type
                 + '.json'
             )
-        return res.json()
+        data = res.json()
+        symbol_info_list = data['data']
+        symbols = list()
+        for symbol_info in symbol_info_list:
+            # Currently considering EQUITY series only
+            if symbol_info['series'] == 'EQ':
+                symbols.append(symbol_info)
+                
+        return symbols
