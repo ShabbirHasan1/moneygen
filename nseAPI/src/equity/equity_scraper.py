@@ -23,9 +23,13 @@ class EquityScraper(EquityScraperBase):
 
 
 
-    def get_info_all(self, instruments: list):
+    def get_info_all(self, instruments: list, specific_info_key: str=None):
         instrument_infos = dict()
         for instrument in instruments:
-            instrument_infos[instrument] = self.get_info_specfic(instrument)
+            if specific_info_key is None:
+                instrument_infos[instrument] = self.get_info_specfic(instrument)
+            else:
+                instrument_infos[instrument] = self.get_info_specfic(instrument)['data'][0][specific_info_key]
         return instrument_infos
+
 
