@@ -1,8 +1,8 @@
-from index_historical import IndexHistorical
+from index_historical.index_historical_base import IndexHistorical
 import requests
 from config import Config
 import os
-from logger import Logger
+from from log_util.logger import Logger
 from selenium_dispatcher import SeleniumDispatcher
 import time
 from selenium.webdriver.common.action_chains import ActionChains
