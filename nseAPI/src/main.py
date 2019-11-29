@@ -9,7 +9,7 @@ from util.gainers_losers_info import GainersLosersInfo
 from equity.equity_scraper import EquityScraper
 
 gainers_info = GainersLosersInfo(info_type='Gainers', view_type='All Securities')
-gainers_list = gainers_info.get_instruments()
+gainers_list = gainers_info.get_instruments(complete_info=False)
 print(gainers_list)
 equity_scraper = EquityScraper()
 print(equity_scraper.get_info_all(gainers_list))

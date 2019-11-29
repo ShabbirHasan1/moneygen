@@ -24,7 +24,7 @@ class GainersLosersInfo(object):
         }
         self.view_type = self.view_type_map[view_type]
 
-    def get_instruments(self):
+    def get_instruments(self, complete_info=False):
         res = requests.get(
                 'https://www.nseindia.com/live_market/dynaContent/live_analysis/'
                 + self.info_type.lower()
@@ -39,5 +39,5 @@ class GainersLosersInfo(object):
             # Currently considering EQUITY series only
             if symbol_info['series'] == 'EQ':
                 symbols.append(symbol_info['symbol'])
-                
-        return symbols
+        
+        return {True: symbol_info_list, False: symbols} [complete_info]
