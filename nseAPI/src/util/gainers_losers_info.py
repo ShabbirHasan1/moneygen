@@ -33,9 +33,3 @@ class GainersLosersInfo(object):
                 + '.json'
             )
         return res.json()
-
-    def get_info_specific(self):
-        pass
-
-    def get_info_all(self):
-        pass
