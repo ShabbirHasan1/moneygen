@@ -6,7 +6,11 @@ from log_util.logger import Logger
 # # print(index_historical_options_put.download_data_all())
 
 from util.gainers_losers_info import GainersLosersInfo
+from equity.equity_scraper import EquityScraper
 
-gl_info = GainersLosersInfo(info_type='Losers', view_type='All Securities')
-Logger.log(gl_info.get_instruments())
+gainers_info = GainersLosersInfo(info_type='Gainers', view_type='All Securities')
+gainers_list = gainers_info.get_instruments()
+print(gainers_list)
+equity_scraper = EquityScraper()
+print(equity_scraper.get_info_all(gainers_list))
 

@@ -1,4 +1,4 @@
-from equity_scraper_base import EquityScraperBase
+from equity.equity_scraper_base import EquityScraperBase
 from util.gainers_losers_info import GainersLosersInfo
 from bs4 import BeautifulSoup
 import requests
@@ -6,8 +6,8 @@ import json
 
 
 class EquityScraper(EquityScraperBase):
-    def __init__(self, instrument_symbol: str):
-        super().__init__(instrument_symbol=instrument_symbol)
+    def __init__(self):
+        pass
 
 
     def get_info_specfic(self, instrument_symbol: str):
@@ -26,7 +26,6 @@ class EquityScraper(EquityScraperBase):
     def get_info_all(self, instruments: list):
         instrument_infos = dict()
         for instrument in instruments:
-            instrument_info = self.get_info_specfic(instrument)
-            instrument_infos[instrument] = instrument_info
+            instrument_infos[instrument] = self.get_info_specfic(instrument)
         return instrument_infos
 

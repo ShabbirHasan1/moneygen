@@ -38,6 +38,6 @@ class GainersLosersInfo(object):
         for symbol_info in symbol_info_list:
             # Currently considering EQUITY series only
             if symbol_info['series'] == 'EQ':
-                symbols.append(symbol_info)
+                symbols.append(symbol_info['symbol'])
                 
         return symbols
