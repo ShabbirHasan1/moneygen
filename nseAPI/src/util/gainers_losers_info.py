@@ -32,12 +32,12 @@ class GainersLosersInfo(object):
                 + '/'\
                 + self.view_type\
                 + '.json'
-        Logger.log(url)
+        Logger.info(url)
         # try:
         res = requests.get(url)
         # except BaseException as ex:
-        #     Logger.log('Exception occured while getting gainer/loser info: '+ str(ex))
-        #     Logger.log('Retrying...')
+        #     Logger.info('Exception occured while getting gainer/loser info: '+ str(ex))
+        #     Logger.info('Retrying...')
         #     driver = SeleniumDispatcher(selenium_wire=False, headless=True).get_driver()
         #     driver.get(url)
         #     driver.close()
