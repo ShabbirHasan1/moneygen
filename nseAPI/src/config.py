@@ -7,3 +7,4 @@ class Config(object):
     SELENIUM_DRIVER_BASE_PATH = 'chromedriver'
     SELENIUM_DRIVER_EXEC_PATH = \
         os.path.join(SELENIUM_DRIVER_BASE_PATH, sys.platform)
+    SLACK_WEBHOOK = os.getenv('SLACK_WEBHOOK')

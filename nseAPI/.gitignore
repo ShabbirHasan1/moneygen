@@ -2,3 +2,4 @@ env/
 .vscode/
 chromedriver/
 **/__pycache__
+.env
