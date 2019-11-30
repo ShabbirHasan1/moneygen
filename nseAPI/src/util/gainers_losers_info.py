@@ -1,4 +1,6 @@
 import requests
+from log_util.logger import Logger
+# from util.selenium_dispatcher import SeleniumDispatcher
 
 class GainersLosersInfo(object):
     '''Creates instance to scrape Gainers/Losers information from NSEIndia
@@ -25,13 +27,21 @@ class GainersLosersInfo(object):
         self.view_type = self.view_type_map[view_type]
 
     def get_instruments(self, complete_info=False):
-        res = requests.get(
-                'https://www.nseindia.com/live_market/dynaContent/live_analysis/'
-                + self.info_type.lower()
-                + '/'
-                + self.view_type
+        url = 'https://www.nseindia.com/live_market/dynaContent/live_analysis/'\
+                + self.info_type.lower()\
+                + '/'\
+                + self.view_type\
                 + '.json'
-            )
+        Logger.log(url)
+        # try:
+        res = requests.get(url)
+        # except BaseException as ex:
+        #     Logger.log('Exception occured while getting gainer/loser info: '+ str(ex))
+        #     Logger.log('Retrying...')
+        #     driver = SeleniumDispatcher(selenium_wire=False, headless=True).get_driver()
+        #     driver.get(url)
+        #     driver.close()
+        #     res = requests.get(url)
         data = res.json()
         symbol_info_list = data['data']
         symbols = list()
