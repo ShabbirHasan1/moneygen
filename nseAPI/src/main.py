@@ -1,5 +1,5 @@
 # from index_historical.index_historical_options import IndexHistoricalOptions
-from log_util.logger import Logger
+from util.log.logger import Logger
 # index_historical_options_call = IndexHistoricalOptions('BANKNIFTY', 'CE')
 # index_historical_options_call.get_info_all()
 # # index_historical_options_put = IndexHistoricalOptions('BANKNIFTY', 'PE')

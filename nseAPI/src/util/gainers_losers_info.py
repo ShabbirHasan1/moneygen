@@ -1,5 +1,5 @@
 import requests
-from log_util.logger import Logger
+from util.log.logger import Logger
 # from util.selenium_dispatcher import SeleniumDispatcher
 
 class GainersLosersInfo(object):

@@ -9,7 +9,7 @@ class SlackWebhook(object):
 
     def send(self, data):
         # Importing it here to avoid error due to circular dependency
-        from log_util.logger import Logger
+        from util.log.logger import Logger
         '''Data can be dict, str, int, list'''
         Logger.info('Sending slack message to: ' + self.webhook_url)
         data = json.dumps({'text': data})
