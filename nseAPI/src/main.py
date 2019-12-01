@@ -10,7 +10,7 @@ from equity.equity_scraper import EquityScraper
 
 gainers_info = GainersLosersInfo(info_type='Gainers', view_type='All Securities')
 gainers_list = gainers_info.get_instruments(complete_info=False)
-print(gainers_list)
 equity_scraper = EquityScraper()
-print(equity_scraper.get_info_all(gainers_list, specific_info_key='deliveryToTradedQuantity'))
-Logger.info(str(equity_scraper.get_info_specfic('GAMMNINFRA')), push_to_slack=True)
+Logger.info(str(equity_scraper.get_info_all(gainers_list, specific_info_key='deliveryToTradedQuantity')), push_to_slack=True)
+Logger.info(str(equity_scraper.get_info_all(gainers_list, specific_info_key='lastPrice')), push_to_slack=True)
+# Logger.info(str(equity_scraper.get_info_specfic('GAMMNINFRA')), push_to_slack=True)
