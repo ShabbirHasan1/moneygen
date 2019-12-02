@@ -21,5 +21,5 @@ from webscraper.gainer_loser_info.rediff_money_gl_scraper import RediffMoneyGLSc
 
 ##### Rediff money ######
 gainers_info = RediffMoneyGLScraper(view_type='All')
-gainers_list = gainers_info.get_instruments(limit_number_of_instruments=10)
+gainers_list = gainers_info.get_instruments(limit_number_of_instruments=3, complete_info=True)
 print(gainers_list)

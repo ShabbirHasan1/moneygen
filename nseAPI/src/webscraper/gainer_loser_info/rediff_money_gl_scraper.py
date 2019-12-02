@@ -17,7 +17,7 @@ class RediffMoneyGLScraper(BaseGLScraper):
         }
         self.view_type = view_type_map[view_type]
     
-    
+
     def get_instruments(self, limit_number_of_instruments=-1, complete_info=False,):
         '''Get instruments
 
@@ -76,6 +76,6 @@ class RediffMoneyGLScraper(BaseGLScraper):
         if complete_info:
             complete_data_url = 'https://money.rediff.com/money1/currentstatus.php?companycode=' + symbol
             complete_data = requests.get(complete_data_url).json()
+            complete_data['symbol'] = symbol
             return complete_data
-        print(symbol)
         return symbol
