@@ -1,0 +1,1 @@
+# TODO: make the app working with docker compose and docker
