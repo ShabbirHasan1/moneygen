@@ -24,15 +24,40 @@ class RediffMoneyGLScraper(BaseGLScraper):
         table = soup.findAll("table", attrs={"class": "dataTable"})[0]
         table_body = table.find('tbody')
         rows = table_body.find_all('tr')
-        data = []
+
+        # Get data of parent page (only tabular data)
+        ## Going to instrument specific page will be required to get symbol name
+        table_data = []
         for row in rows:
             cols = row.find_all('td')
             link = row.find_all('td')[0].find_all('a')[0]['href']
             cols = [ele.text.strip() for ele in cols]
             cols.append('https:'+link)
-            data.append([ele for ele in cols if ele])
-        # TODO: Return Symbols instead of names of instruments and check for complete data flag
-        return data
+            table_data.append([ele for ele in cols if ele])
 
-    def get_instrument_info(self):
-        pass
+        # Getting information related to each specific instrument
+        instruments_data = dict()
+        for instrument_data in table_data:
+            instrument_name = instrument_data[0]
+            child_data = self.get_instrument_info(instrument_data, complete_info=complete_info)
+            if complete_info:
+                # Complete info will be a dict
+                instruments_data[child_data['symbol']] = child_data
+            else:
+                # Solo info will just be symbol name for instrument
+                instruments_data[child_data] = instrument_name
+
+        # TODO: Remove multiple checks for `complete_info` flag
+        return {instruments_data: True, instruments_data.keys(): False} [complete_info]
+
+
+    def get_instrument_info(self, instrument_data: list, complete_info=False):     
+        instrument_url = instrument_data[4]
+        res = requests.get(instrument_url)
+        soup = BeautifulSoup(res.content, 'html.parser')
+        symbol = soup.findAll("input", attrs={"name": "nseCompanyCode"})[0]['value']
+        if complete_info:
+            complete_data_url = 'https://money.rediff.com/money1/currentstatus.php?companycode=' + symbol
+            complete_data = requests.get(complete_data_url).json()
+            return complete_data
+        return symbol
