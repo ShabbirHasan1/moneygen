@@ -1,0 +1,1 @@
+# TODO: plugin newsapi.org API along with custom scraping for complete news
