@@ -8,6 +8,7 @@ class RediffMoneyGLScraper(BaseGLScraper):
     Parameters:
     view_type (str): Can only be 'All' or 'Nifty 50'
     '''
+    # TODO: Add support for info_type (to switch between gainers and losers) as well
     def __init__(self, view_type: str):
         super().__init__()
         view_type_map = {
@@ -39,7 +40,7 @@ class RediffMoneyGLScraper(BaseGLScraper):
         instruments_data = dict()
         for instrument_data in table_data:
             instrument_name = instrument_data[0]
-            child_data = self.get_instrument_info(instrument_data, complete_info=complete_info)
+            child_data = self.__get_instrument_info(instrument_data, complete_info=complete_info)
             if complete_info:
                 # Complete info will be a dict
                 instruments_data[child_data['symbol']] = child_data
@@ -48,10 +49,10 @@ class RediffMoneyGLScraper(BaseGLScraper):
                 instruments_data[child_data] = instrument_name
 
         # TODO: Remove multiple checks for `complete_info` flag
-        return {instruments_data: True, instruments_data.keys(): False} [complete_info]
+        return {True: instruments_data, False: list(instruments_data.keys())} [complete_info]
 
 
-    def get_instrument_info(self, instrument_data: list, complete_info=False):     
+    def __get_instrument_info(self, instrument_data: list, complete_info=False):     
         instrument_url = instrument_data[4]
         res = requests.get(instrument_url)
         soup = BeautifulSoup(res.content, 'html.parser')
@@ -60,4 +61,5 @@ class RediffMoneyGLScraper(BaseGLScraper):
             complete_data_url = 'https://money.rediff.com/money1/currentstatus.php?companycode=' + symbol
             complete_data = requests.get(complete_data_url).json()
             return complete_data
+        print(symbol)
         return symbol
