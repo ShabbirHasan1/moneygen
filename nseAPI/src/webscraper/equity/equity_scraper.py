@@ -1,5 +1,4 @@
-from equity.equity_scraper_base import EquityScraperBase
-from util.gainers_losers_info import GainersLosersInfo
+from webscraper.equity.equity_scraper_base import EquityScraperBase
 from bs4 import BeautifulSoup
 import requests
 import json

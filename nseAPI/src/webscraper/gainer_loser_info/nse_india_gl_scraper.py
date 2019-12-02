@@ -2,7 +2,7 @@ import requests
 from util.log.logger import Logger
 # from util.selenium_dispatcher import SeleniumDispatcher
 
-class GainersLosersInfo(object):
+class NSEIndiaGLScraper(object):
     '''Creates instance to scrape Gainers/Losers information from NSEIndia
     Parameters:
     info_type (str): Can only be either 'Gainers' or 'Losers'
