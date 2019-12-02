@@ -3,6 +3,8 @@ from util.log.logger import Logger
 from webscraper.gainer_loser_info.nse_india_gl_scraper import NSEIndiaGLScraper
 from webscraper.equity.equity_scraper import EquityScraper
 from webscraper.gainer_loser_info.rediff_money_gl_scraper import RediffMoneyGLScraper
+import threading
+
 
 
 ###### OPTIONS #######
@@ -15,7 +17,6 @@ from webscraper.gainer_loser_info.rediff_money_gl_scraper import RediffMoneyGLSc
 
 
 
-# TODO: Implement multi threading to execute all scrapers parallely
 # TODO: Write util methods to format slack messages
 ##### NSEIndia ######
 def nse_india():
@@ -66,6 +67,13 @@ def rediff_money():
 
 
 
+t1 = threading.Thread(target=nse_india, args=()) 
+t2 = threading.Thread(target=rediff_money, args=())
 
-nse_india()
-rediff_money()
+t1.start() 
+t2.start() 
+
+t1.join() 
+t2.join() 
+
+Logger.info("Done!") 
