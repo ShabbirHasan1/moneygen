@@ -45,7 +45,7 @@ def nse_india():
 ##### Rediff money ######
 def rediff_money():
     gainers_info = RediffMoneyGLScraper(view_type='All')
-    gainers_list = gainers_info.get_instruments(limit_number_of_instruments=3)
+    gainers_list = gainers_info.get_instruments(limit_number_of_instruments=10)
     equity_scraper = EquityScraper()
     percent_delivered = equity_scraper.get_info_all(gainers_list, specific_info_key='deliveryToTradedQuantity')
     last_price = equity_scraper.get_info_all(gainers_list, specific_info_key='lastPrice')
