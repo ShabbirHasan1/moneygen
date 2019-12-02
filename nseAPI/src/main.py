@@ -11,18 +11,28 @@ from webscraper.gainer_loser_info.rediff_money_gl_scraper import RediffMoneyGLSc
 # # index_historical_options_put = IndexHistoricalOptions('BANKNIFTY', 'PE')
 # # print(index_historical_options_put.download_data_all())
 
+
+# TODO: Implement multi threading to execute all scrapers parallely
+# TODO: Write util methods to format slack messages
 ##### NSEIndia ######
-# gainers_info = NSEIndiaGLScraper(info_type='Gainers', view_type='All Securities')
-# gainers_list = gainers_info.get_instruments(complete_info=False)
-# equity_scraper = EquityScraper()
-# Logger.info(str(equity_scraper.get_info_all(gainers_list, specific_info_key='deliveryToTradedQuantity')), push_to_slack=True)
-# Logger.info(str(equity_scraper.get_info_all(gainers_list, specific_info_key='lastPrice')), push_to_slack=True)
+def nse_india():
+    gainers_info = NSEIndiaGLScraper(info_type='Gainers', view_type='All Securities')
+    gainers_list = gainers_info.get_instruments(complete_info=False)
+    equity_scraper = EquityScraper()
+    percent_delivered = str(equity_scraper.get_info_all(gainers_list, specific_info_key='deliveryToTradedQuantity'))
+    last_price = str(equity_scraper.get_info_all(gainers_list, specific_info_key='lastPrice'))
+    Logger.info(percent_delivered, push_to_slack=True)
+    Logger.info(last_price, push_to_slack=True)
 
 
 ##### Rediff money ######
-gainers_info = RediffMoneyGLScraper(view_type='All')
-gainers_list = gainers_info.get_instruments(limit_number_of_instruments=3)
-print(gainers_list)
-equity_scraper = EquityScraper()
-print(equity_scraper.get_info_all(gainers_list, specific_info_key='deliveryToTradedQuantity'))
-print(equity_scraper.get_info_all(gainers_list, specific_info_key='lastPrice'))
+def rediff():
+    gainers_info = RediffMoneyGLScraper(view_type='All')
+    gainers_list = gainers_info.get_instruments(limit_number_of_instruments=3)
+    print(gainers_list)
+    equity_scraper = EquityScraper()
+    percent_delivered = str(equity_scraper.get_info_all(gainers_list, specific_info_key='deliveryToTradedQuantity'))
+    last_price = str(equity_scraper.get_info_all(gainers_list, specific_info_key='lastPrice'))
+    Logger.info(percent_delivered, push_to_slack=True)
+    Logger.info(last_price, push_to_slack=True)
+
