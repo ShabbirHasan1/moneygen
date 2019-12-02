@@ -17,7 +17,7 @@ class RediffMoneyGLScraper(BaseGLScraper):
         }
         self.view_type = view_type_map[view_type]
     
-
+    # TODO: Add limit flag, number of instruments can go beyong 400 for 'All'.
     def get_instruments(self, complete_info=False):
         url = 'https://money.rediff.com/gainers/nse/daily/' + self.view_type
         res = requests.get(url)
