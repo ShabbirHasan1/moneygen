@@ -1,8 +1,8 @@
 import requests
 from util.log.logger import Logger
-# from util.selenium_dispatcher import SeleniumDispatcher
+from webscraper.gainer_loser_info.base_gl_scraper import BaseGLScraper
 
-class NSEIndiaGLScraper(object):
+class NSEIndiaGLScraper(BaseGLScraper):
     '''Creates instance to scrape Gainers/Losers information from NSEIndia
     Parameters:
     info_type (str): Can only be either 'Gainers' or 'Losers'
@@ -15,6 +15,7 @@ class NSEIndiaGLScraper(object):
                     - 'All Securities'
     '''
     def __init__(self, info_type: str, view_type: str):
+        super().__init__()
         self.info_type = info_type
         self.view_type_map = {
             'Nifty 50': 'nifty' + self.info_type + '1',
@@ -51,3 +52,8 @@ class NSEIndiaGLScraper(object):
                 symbols.append(symbol_info['symbol'])
         
         return {True: symbol_info_list, False: symbols} [complete_info]
+
+
+    # TODO: Setting complete info flag in `get_instruments` method should call below method for each instrument to get info
+    def get_instrument_info(self):
+        pass
