@@ -21,5 +21,8 @@ from webscraper.gainer_loser_info.rediff_money_gl_scraper import RediffMoneyGLSc
 
 ##### Rediff money ######
 gainers_info = RediffMoneyGLScraper(view_type='All')
-gainers_list = gainers_info.get_instruments(limit_number_of_instruments=3, complete_info=True)
+gainers_list = gainers_info.get_instruments(limit_number_of_instruments=3)
 print(gainers_list)
+equity_scraper = EquityScraper()
+print(equity_scraper.get_info_all(gainers_list, specific_info_key='deliveryToTradedQuantity'))
+print(equity_scraper.get_info_all(gainers_list, specific_info_key='lastPrice'))
