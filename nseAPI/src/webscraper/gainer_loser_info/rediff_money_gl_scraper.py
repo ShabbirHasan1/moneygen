@@ -18,7 +18,18 @@ class RediffMoneyGLScraper(BaseGLScraper):
         self.view_type = view_type_map[view_type]
     
     # TODO: Add limit flag, number of instruments can go beyong 400 for 'All'.
-    def get_instruments(self, complete_info=False):
+    def get_instruments(self, limit_number_of_instruments=-1, complete_info=False,):
+        '''Get instruments
+
+        Parameters:
+
+        limit_number_of_instruments (int): Number of instruments for view_type='All'
+        can go beyond 500 which can take time. Limit for fewer<->faster results.
+
+        complete_info (bool): Specifies if complete info of instrument is needed,
+        returns just symbol name otherwise.
+        '''
+
         url = 'https://money.rediff.com/gainers/nse/daily/' + self.view_type
         res = requests.get(url)
         soup = BeautifulSoup(res.content, 'html.parser')
@@ -29,6 +40,11 @@ class RediffMoneyGLScraper(BaseGLScraper):
         # Get data of parent page (only tabular data)
         ## Going to instrument specific page will be required to get symbol name
         table_data = []
+
+        if limit_number_of_instruments != -1:
+            rows = rows[:limit_number_of_instruments]
+
+        
         for row in rows:
             cols = row.find_all('td')
             link = row.find_all('td')[0].find_all('a')[0]['href']
