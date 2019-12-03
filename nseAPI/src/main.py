@@ -1,4 +1,4 @@
-from webscraper.index_historical.index_historical_options import IndexHistoricalOptions
+from webscraper.index_historical import IndexHistoricalOptions
 from tasks import NSEIndiaTradedToDelivered, RediffMoneyTradedToDelivered
 
 

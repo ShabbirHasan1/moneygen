@@ -1,4 +1,4 @@
-from webscraper.index_historical.index_historical_base import IndexHistorical
+from webscraper.index_historical import IndexHistoricalBase
 import requests
 from config import Config
 import os
@@ -9,7 +9,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 import json
 
 
-class IndexHistoricalOptions(IndexHistorical):
+class IndexHistoricalOptions(IndexHistoricalBase):
     def __init__(self, symbol_name: str, option_type: str):
         super().__init__(symbol_name)
         self.derivative_type = 'OPTIONS'
