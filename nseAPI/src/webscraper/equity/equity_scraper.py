@@ -1,4 +1,4 @@
-from webscraper.equity.equity_scraper_base import EquityScraperBase
+from webscraper.equity import EquityScraperBase
 from bs4 import BeautifulSoup
 import requests
 import json

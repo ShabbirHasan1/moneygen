@@ -1,0 +1,2 @@
+from webscraper.equity.equity_scraper_base import EquityScraperBase
+from webscraper.equity.equity_scraper import EquityScraper

@@ -1,7 +1,7 @@
 import threading
 from util.log.logger import Logger
 from webscraper.gainer_loser_info.rediff_money_gl_scraper import RediffMoneyGLScraper
-from webscraper.equity.equity_scraper import EquityScraper
+from webscraper.equity import EquityScraper
 
 
 class RediffMoneyTradedToDelivered(threading.Thread):

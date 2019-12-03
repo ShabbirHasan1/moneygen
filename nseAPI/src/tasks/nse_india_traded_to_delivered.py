@@ -1,7 +1,7 @@
 import threading
 from util.log.logger import Logger
 from webscraper.gainer_loser_info.nse_india_gl_scraper import NSEIndiaGLScraper
-from webscraper.equity.equity_scraper import EquityScraper
+from webscraper.equity import EquityScraper
 
 
 class NSEIndiaTradedToDelivered(threading.Thread):
