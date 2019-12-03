@@ -1,0 +1,3 @@
+from webscraper.gainer_loser_info.base_gl_scraper import BaseGLScraper
+from webscraper.gainer_loser_info.nse_india_gl_scraper import NSEIndiaGLScraper
+from webscraper.gainer_loser_info.rediff_money_gl_scraper import RediffMoneyGLScraper

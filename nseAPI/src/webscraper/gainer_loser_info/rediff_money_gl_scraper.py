@@ -1,4 +1,4 @@
-from webscraper.gainer_loser_info.base_gl_scraper import BaseGLScraper
+from webscraper.gainer_loser_info import BaseGLScraper
 from bs4 import BeautifulSoup
 import requests
 

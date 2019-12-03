@@ -1,6 +1,6 @@
 import threading
 from util.log.logger import Logger
-from webscraper.gainer_loser_info.nse_india_gl_scraper import NSEIndiaGLScraper
+from webscraper.gainer_loser_info import NSEIndiaGLScraper
 from webscraper.equity import EquityScraper
 
 

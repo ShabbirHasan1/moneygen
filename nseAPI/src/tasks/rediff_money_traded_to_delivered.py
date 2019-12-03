@@ -1,6 +1,6 @@
 import threading
 from util.log.logger import Logger
-from webscraper.gainer_loser_info.rediff_money_gl_scraper import RediffMoneyGLScraper
+from webscraper.gainer_loser_info import RediffMoneyGLScraper
 from webscraper.equity import EquityScraper
 
 

@@ -1,6 +1,6 @@
 import requests
 from util.log.logger import Logger
-from webscraper.gainer_loser_info.base_gl_scraper import BaseGLScraper
+from webscraper.gainer_loser_info import BaseGLScraper
 
 class NSEIndiaGLScraper(BaseGLScraper):
     '''Creates instance to scrape Gainers/Losers information from NSEIndia
