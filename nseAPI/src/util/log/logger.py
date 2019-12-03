@@ -1,4 +1,4 @@
-from util.slack.slack_webhook import SlackWebhook
+from util.slack import SlackWebhook
 
 class Logger:
     def __init__():
