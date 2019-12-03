@@ -2,7 +2,7 @@ from webscraper.index_historical import IndexHistoricalBase
 import requests
 from config import Config
 import os
-from util.log.logger import Logger
+from util.log import Logger
 from util.selenium_dispatcher import SeleniumDispatcher
 import time
 from selenium.webdriver.common.action_chains import ActionChains

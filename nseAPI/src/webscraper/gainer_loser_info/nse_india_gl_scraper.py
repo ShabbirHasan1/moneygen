@@ -1,5 +1,5 @@
 import requests
-from util.log.logger import Logger
+from util.log import Logger
 from webscraper.gainer_loser_info import BaseGLScraper
 
 class NSEIndiaGLScraper(BaseGLScraper):
