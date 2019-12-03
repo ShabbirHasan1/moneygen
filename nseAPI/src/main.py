@@ -1,6 +1,6 @@
 from webscraper.index_historical import IndexHistoricalOptions
 from tasks import NSEIndiaTradedToDelivered, RediffMoneyTradedToDelivered
-
+from util.log import Logger
 
 
 ###### OPTIONS #######
@@ -13,5 +13,10 @@ from tasks import NSEIndiaTradedToDelivered, RediffMoneyTradedToDelivered
 
 
 
-t1 = RediffMoneyTradedToDelivered()
+t1 = NSEIndiaTradedToDelivered()
+t2 = RediffMoneyTradedToDelivered()
 t1.start()
+t2.start()
+t1.join()
+t2.join()
+Logger.info('Complete!')
