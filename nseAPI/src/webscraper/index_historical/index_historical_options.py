@@ -3,7 +3,7 @@ import requests
 from config import Config
 import os
 from util.log import Logger
-from util.selenium_dispatcher import SeleniumDispatcher
+from util import SeleniumDispatcher
 import time
 from selenium.webdriver.common.action_chains import ActionChains
 import json
