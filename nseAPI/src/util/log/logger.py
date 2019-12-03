@@ -1,5 +1,6 @@
 from util.slack import SlackWebhook
 
+# TODO: Properly implement different levels of logging
 class Logger:
     def __init__():
         pass
