@@ -1,10 +1,12 @@
 beautifulsoup4==4.8.1
 certifi==2019.9.11
 chardet==3.0.4
+dnspython==1.16.0
 idna==2.8
 pep8==1.7.1
 pymodm==0.4.2
 pymongo==3.9.0
+python-dotenv==0.10.3
 requests==2.22.0
 selenium==3.141.0
 selenium-wire==1.0.10
