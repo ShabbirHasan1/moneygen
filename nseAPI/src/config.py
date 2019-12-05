@@ -2,7 +2,7 @@ import sys
 import os
 
 
-class Config(object):
+class Config:
     DOWNLOAD_DIRECTORY = '/Users/mayank.gupta/Moneygen/nseAPI/downloads'
     SELENIUM_DRIVER_BASE_PATH = 'chromedriver'
     SELENIUM_DRIVER_EXEC_PATH = \

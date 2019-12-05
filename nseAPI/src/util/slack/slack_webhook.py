@@ -3,7 +3,7 @@ from config import Config
 import json
 
 
-class SlackWebhook(object):
+class SlackWebhook:
     def __init__(self, webhook=Config.SLACK_WEBHOOK):
         self.webhook_url = webhook
 

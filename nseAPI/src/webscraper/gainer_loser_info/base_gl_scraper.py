@@ -1,4 +1,4 @@
-class BaseGLScraper(object):
+class BaseGLScraper:
     def __init__(self):
         pass
 
