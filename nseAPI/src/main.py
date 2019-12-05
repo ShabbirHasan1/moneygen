@@ -1,6 +1,7 @@
 from webscraper.index_historical import IndexHistoricalOptions
 from tasks import NSEIndiaTradedToDelivered, RediffMoneyTradedToDelivered
 from util.log import Logger
+from datetime import datetime
 
 
 # TODO: Complete this and move to tasks module
@@ -11,7 +12,7 @@ from util.log import Logger
 # # print(index_historical_options_put.download_data_all())
 
 
-
+Logger.info('=====================Job Starting at: ' + str(datetime.now()))
 t1 = NSEIndiaTradedToDelivered()
 t2 = RediffMoneyTradedToDelivered()
 t1.start()
@@ -19,3 +20,4 @@ t2.start()
 t1.join()
 t2.join()
 Logger.info('Complete!')
+Logger.info('=====================Job Completed at: ' + str(datetime.now()))
