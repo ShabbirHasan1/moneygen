@@ -13,12 +13,11 @@ from datetime import datetime
 
 
 Logger.info('=====================Job Starting at: ' + str(datetime.now()))
-t1 = NSEIndiaTradedToDelivered()
-# t2 = RediffMoneyTradedToDelivered()
-t1.run()
-# t1.start()
-# t2.start()
-# t1.join()
-# t2.join()
+t1 = NSEIndiaTradedToDelivered(push_output_to_slack=True)
+t2 = RediffMoneyTradedToDelivered(number_of_instruments=10, push_output_to_slack=True)
+t1.start()
+t2.start()
+t1.join()
+t2.join()
 Logger.info('Complete!')
 Logger.info('=====================Job Completed at: ' + str(datetime.now()))
