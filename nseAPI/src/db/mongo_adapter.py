@@ -11,7 +11,7 @@ class MongoAdapter:
         self.__client = MongoClient(conn_string)
         self.db = db
         # PyMODM connection
-        connect(conn_string + '/' + db, alias=conn_alias)
+        connect(conn_string + db, alias=conn_alias)
 
     def get_mongo_client(self):
         return self.__client

@@ -1,0 +1,1 @@
+from db.mongo_adapter import MongoAdapter

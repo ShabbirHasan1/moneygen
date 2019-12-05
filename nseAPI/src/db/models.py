@@ -7,7 +7,7 @@ from config import Config
 class GainerLoserInfoModel(MongoModel):
     listOfCompanies = fields.ListField()
     createdBy = fields.CharField()
-    createdDate = fields.DateTimeField()
+    createdDate = fields.CharField()
 
     class Meta:
         write_concern = WriteConcern(j=True)
