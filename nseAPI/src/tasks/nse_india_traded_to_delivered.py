@@ -33,6 +33,7 @@ class NSEIndiaTradedToDelivered(threading.Thread):
         last_price = equity_scraper.get_info_all(gainers_list, specific_info_key='lastPrice')
 
         ## Formatting output ##
+        # TODO: Use python text tables to make it look good
         percent_delivered_str = '---------NSEIndia-------\ndeliveryToTradedQuantity--------\n'
         for item in percent_delivered:
             percent_delivered_str = percent_delivered_str + '{} - {}\n'.format(item, percent_delivered[item])
