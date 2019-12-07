@@ -12,6 +12,7 @@ class Config:
         os.path.join(SELENIUM_DRIVER_BASE_PATH, sys.platform)
     SLACK_WEBHOOK = os.getenv('SLACK_WEBHOOK')
     MONGO_DB = 'nse_api'
+    MONGO_AUTH_DB = os.getenv('MONGO_AUTH_DB')
     MONGO_CONNECTION_STRING = os.getenv('MONGO_CONNECTION_STRING') + '/'
     CONNECTION_ALIAS = 'nse_api'
     GAINER_LOSER_COLLECTION = 'gainer_loser_info'
