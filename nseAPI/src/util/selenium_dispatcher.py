@@ -47,6 +47,8 @@ class SeleniumDispatcher:
     def get_driver(self):
         return self.__driver
 
+    # TODO : make this method work in headless=True, works great with headless=False
+    # @body Try using virtual display to run GUI in memory
     def get_response(self, url):
         '''Get reponse to a GET request using selenium
         Needs to 'selenium_wire' to be set to True

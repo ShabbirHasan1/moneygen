@@ -38,7 +38,7 @@ class NSEIndiaGLScraper(BaseGLScraper):
                 + '.json'
         Logger.info(url)
         # try:
-        res = SeleniumDispatcher(headless=True, selenium_wire=True).get_response(url)
+        res = requests.get(url)
         # except BaseException as ex:
         #     Logger.info('Exception occured while getting gainer/loser info: '+ str(ex))
         #     Logger.info('Retrying...')
@@ -46,7 +46,7 @@ class NSEIndiaGLScraper(BaseGLScraper):
         #     driver.get(url)
         #     driver.close()
         #     res = requests.get(url)
-        data = json.loads(res)
+        data = res.get_json()
         symbol_info_list = data['data']
         symbols = list()
         for symbol_info in symbol_info_list:

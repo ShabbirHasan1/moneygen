@@ -14,8 +14,8 @@ class EquityScraper(EquityScraperBase):
         url = 'https://nseindia.com/live_market/dynaContent/live_watch/get_quote/GetQuote.jsp?symbol=' \
                 + instrument_symbol
 
-        res = SeleniumDispatcher(headless=True, selenium_wire=True).get_response(url)
-        soup = BeautifulSoup(res, 'html.parser')
+        res = requests.get(url)
+        soup = BeautifulSoup(res.content, 'html.parser')
         # Get data inside html element with id='responseDiv'
         res_json = soup.find(id='responseDiv').get_text()
         res_dict = json.loads(res_json)
