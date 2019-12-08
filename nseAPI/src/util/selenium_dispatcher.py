@@ -8,6 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from config import Config
 from seleniumwire import webdriver as wiredriver
+import json
 
 
 class SeleniumDispatcher:
@@ -45,5 +46,18 @@ class SeleniumDispatcher:
 
     def get_driver(self):
         return self.__driver
+
+    def get_response(self, url):
+        '''Get reponse to a GET request using selenium
+        Needs to 'selenium_wire' to be set to True
+        '''
+        self.__driver.get(url)
+        # for request in self.__driver.requests:
+        #     if request.response:
+        #         if request.path == url:
+        request = self.__driver.wait_for_request(url, timeout=30)
+        data = request.response.body.decode("utf-8")
+        self.__driver.close()
+        return data
 
     

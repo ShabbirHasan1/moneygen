@@ -1,6 +1,9 @@
 import requests
 from util.log import Logger
 from webscraper.gainer_loser_info import BaseGLScraper
+from util import SeleniumDispatcher
+import json
+
 
 class NSEIndiaGLScraper(BaseGLScraper):
     '''Creates instance to scrape Gainers/Losers information from NSEIndia
@@ -35,7 +38,7 @@ class NSEIndiaGLScraper(BaseGLScraper):
                 + '.json'
         Logger.info(url)
         # try:
-        res = requests.get(url)
+        res = SeleniumDispatcher(headless=False, selenium_wire=True).get_response(url)
         # except BaseException as ex:
         #     Logger.info('Exception occured while getting gainer/loser info: '+ str(ex))
         #     Logger.info('Retrying...')
@@ -43,7 +46,7 @@ class NSEIndiaGLScraper(BaseGLScraper):
         #     driver.get(url)
         #     driver.close()
         #     res = requests.get(url)
-        data = res.json()
+        data = json.loads(res)
         symbol_info_list = data['data']
         symbols = list()
         for symbol_info in symbol_info_list:

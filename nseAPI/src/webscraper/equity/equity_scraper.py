@@ -2,6 +2,7 @@ from webscraper.equity import EquityScraperBase
 from bs4 import BeautifulSoup
 import requests
 import json
+from util import SeleniumDispatcher
 
 
 class EquityScraper(EquityScraperBase):
@@ -13,8 +14,8 @@ class EquityScraper(EquityScraperBase):
         url = 'https://nseindia.com/live_market/dynaContent/live_watch/get_quote/GetQuote.jsp?symbol=' \
                 + instrument_symbol
 
-        res = requests.get(url)
-        soup = BeautifulSoup(res.content, 'html.parser')
+        res = SeleniumDispatcher(headless=False, selenium_wire=True).get_response(url)
+        soup = BeautifulSoup(res, 'html.parser')
         # Get data inside html element with id='responseDiv'
         res_json = soup.find(id='responseDiv').get_text()
         res_dict = json.loads(res_json)
