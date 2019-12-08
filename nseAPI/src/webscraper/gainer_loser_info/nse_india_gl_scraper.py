@@ -38,7 +38,7 @@ class NSEIndiaGLScraper(BaseGLScraper):
                 + '.json'
         Logger.info(url)
         # try:
-        res = SeleniumDispatcher(headless=False, selenium_wire=True).get_response(url)
+        res = SeleniumDispatcher(headless=True, selenium_wire=True).get_response(url)
         # except BaseException as ex:
         #     Logger.info('Exception occured while getting gainer/loser info: '+ str(ex))
         #     Logger.info('Retrying...')
