@@ -31,21 +31,15 @@ class NSEIndiaGLScraper(BaseGLScraper):
         self.view_type = self.view_type_map[view_type]
 
     def get_instruments(self, complete_info=False):
+        # TODO: add other 'view type' and 'info_type' support as well
+        # @body Rewrite this part of code using nsetools 
         url = 'https://www.nseindia.com/live_market/dynaContent/live_analysis/'\
                 + self.info_type.lower()\
                 + '/'\
                 + self.view_type\
                 + '.json'
         Logger.info(url)
-        # try:
         res = requests.get(url)
-        # except BaseException as ex:
-        #     Logger.info('Exception occured while getting gainer/loser info: '+ str(ex))
-        #     Logger.info('Retrying...')
-        #     driver = SeleniumDispatcher(selenium_wire=False, headless=True).get_driver()
-        #     driver.get(url)
-        #     driver.close()
-        #     res = requests.get(url)
         data = res.get_json()
         symbol_info_list = data['data']
         symbols = list()
