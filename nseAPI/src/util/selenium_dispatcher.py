@@ -23,6 +23,15 @@ class SeleniumDispatcher:
 
     
     def __get_chrome(self, headless: bool = False, download_path: str = None, selenium_wire: bool = False):
+        # Selenium-wire options
+        wire_options = {
+            'connection_timeout': 15,
+            'proxy': {
+                'http': 'http://username:password@127.0.0.1',
+                'https': 'https://lusername:password@127.0.0.1',
+            }
+        }
+
         # Selenium __driver options for chrome
         options = Options() 
         # Enable downloads if download_path is provided
@@ -48,19 +57,25 @@ class SeleniumDispatcher:
         if selenium_wire:
             self.__driver = wiredriver.Chrome(executable_path = Config.SELENIUM_DRIVER_EXEC_PATH, chrome_options = options)
         else:    
-            self.__driver = webdriver.Chrome(executable_path = Config.SELENIUM_DRIVER_EXEC_PATH, chrome_options = options)
+            self.__driver = webdriver.Chrome(executable_path = Config.SELENIUM_DRIVER_EXEC_PATH, chrome_options = options, seleniumwire_options=wire_options)
 
         if download_path:
             self.__driver.command_executor._commands["send_command"] = ("POST", '/session/$sessionId/chromium/send_command')
             self.__driver.execute("send_command", params)
 
     def __get_firefox(self, headless: bool = False, download_path: str = None, selenium_wire: bool = False):
-
+        wire_options = {
+            'connection_timeout': 15,
+            'proxy': {
+                'http': 'http://username:password@127.0.0.1',
+                'https': 'https://lusername:password@127.0.0.1',
+            }
+        }
         # TODO: Enable headless mode for firefox
         if selenium_wire:
             self.__driver = wiredriver.Firefox(executable_path = os.path.join(Config.SELENIUM_DRIVER_BASE_PATH, 'geckodriver'))
         else:    
-            self.__driver = webdriver.Firefox(executable_path = os.path.join(Config.SELENIUM_DRIVER_BASE_PATH, 'geckodriver'))
+            self.__driver = webdriver.Firefox(executable_path = os.path.join(Config.SELENIUM_DRIVER_BASE_PATH, 'geckodriver'), seleniumwire_options=wire_options)
 
         # TODO: Enable downloads in firefox
         # if download_path:
