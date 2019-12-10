@@ -9,10 +9,20 @@ from selenium.webdriver.common.by import By
 from config import Config
 from seleniumwire import webdriver as wiredriver
 import json
+import os
 
 
 class SeleniumDispatcher:
-    def __init__(self, headless: bool = False, download_path: str = None, selenium_wire: bool = False):
+    def __init__(self, headless: bool = False, download_path: str = None, selenium_wire: bool = False, driver_type='firefox'):
+        self.__driver = None
+        if driver_type == 'firefox':
+            self.__get_firefox()
+        else:
+            self.__get_chrome()
+
+
+    
+    def __get_chrome(self, headless: bool = False, download_path: str = None, selenium_wire: bool = False):
         # Selenium __driver options for chrome
         options = Options() 
         # Enable downloads if download_path is provided
@@ -43,6 +53,19 @@ class SeleniumDispatcher:
         if download_path:
             self.__driver.command_executor._commands["send_command"] = ("POST", '/session/$sessionId/chromium/send_command')
             self.__driver.execute("send_command", params)
+
+    def __get_firefox(self, headless: bool = False, download_path: str = None, selenium_wire: bool = False):
+
+        # TODO: Enable headless mode for firefox
+        if selenium_wire:
+            self.__driver = wiredriver.Firefox(executable_path = os.path.join(Config.SELENIUM_DRIVER_BASE_PATH, 'geckodriver'))
+        else:    
+            self.__driver = webdriver.Firefox(executable_path = os.path.join(Config.SELENIUM_DRIVER_BASE_PATH, 'geckodriver'))
+
+        # TODO: Enable downloads in firefox
+        # if download_path:
+        #     self.__driver.command_executor._commands["send_command"] = ("POST", '/session/$sessionId/chromium/send_command')
+        #     self.__driver.execute("send_command", params)
 
     def get_driver(self):
         return self.__driver
