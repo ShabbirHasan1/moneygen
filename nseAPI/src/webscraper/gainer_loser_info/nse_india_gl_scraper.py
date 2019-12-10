@@ -39,9 +39,11 @@ class NSEIndiaGLScraper(BaseGLScraper):
                 + self.view_type\
                 + '.json'
         Logger.info(url)
-        res = requests.get(url)
-        data = res.get_json()
-        symbol_info_list = data['data']
+        res = SeleniumDispatcher(headless=False, selenium_wire=True).get_response(url)
+        symbol_info_list = json.loads(res)['data']
+        # res = requests.get(url)
+        # data = res.get_json()
+        # symbol_info_list = data['data']
         symbols = list()
         for symbol_info in symbol_info_list:
             # Currently considering EQUITY series only
