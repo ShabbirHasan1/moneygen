@@ -16,9 +16,9 @@ class SeleniumDispatcher:
     def __init__(self, headless: bool = False, download_path: str = None, selenium_wire: bool = False, driver_type='firefox'):
         self.__driver = None
         if driver_type == 'firefox':
-            self.__get_firefox()
+            self.__get_firefox(headless=headless, download_path=download_path, selenium_wire=selenium_wire)
         else:
-            self.__get_chrome()
+            self.__get_chrome(headless=headless, download_path=download_path, selenium_wire=selenium_wire)
 
 
     
