@@ -3,7 +3,7 @@ from util.log import Logger
 from webscraper.gainer_loser_info import BaseGLScraper
 from util import SeleniumDispatcher
 import json
-
+from config import Config
 
 class NSEIndiaGLScraper(BaseGLScraper):
     '''Creates instance to scrape Gainers/Losers information from NSEIndia
@@ -39,9 +39,9 @@ class NSEIndiaGLScraper(BaseGLScraper):
                 + self.view_type\
                 + '.json'
         Logger.info(url)
-        res = SeleniumDispatcher(headless=False, selenium_wire=True).get_response(url)
-        symbol_info_list = json.loads(res)['data']
-        # res = requests.get(url)
+        # res = SeleniumDispatcher(headless=False, selenium_wire=True).get_response(url)
+        res = requests.get(url, headers=Config.NSE_HEADERS)
+        symbol_info_list = res.json()['data']
         # data = res.get_json()
         # symbol_info_list = data['data']
         symbols = list()

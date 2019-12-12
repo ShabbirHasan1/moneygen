@@ -4,6 +4,7 @@ import requests
 import json
 from util import SeleniumDispatcher
 from nsetools import Nse
+from config import Config
 
 
 class EquityScraper(EquityScraperBase):
@@ -15,12 +16,13 @@ class EquityScraper(EquityScraperBase):
         url = 'https://nseindia.com/live_market/dynaContent/live_watch/get_quote/GetQuote.jsp?symbol=' \
                 + instrument_symbol
 
-        res = SeleniumDispatcher(headless=False, selenium_wire=True).get_response(url)
-        soup = BeautifulSoup(res, 'html.parser')
+        # res = SeleniumDispatcher(headless=False, selenium_wire=True).get_response(url)
+        res = requests.get(url, headers=Config.NSE_HEADERS)
+        soup = BeautifulSoup(res.content, 'html.parser')
         # Get data inside html element with id='responseDiv'
         res_json = soup.find(id='responseDiv').get_text()
         res_dict = json.loads(res_json)
-        return res_dict
+        return res_dict['data'][0]
 
 
 
@@ -30,7 +32,7 @@ class EquityScraper(EquityScraperBase):
             if specific_info_key is None:
                 instrument_infos[instrument] = self.get_info_specfic(instrument)
             else:
-                instrument_infos[instrument] = self.get_info_specfic(instrument)['data'][0][specific_info_key]
+                instrument_infos[instrument] = self.get_info_specfic(instrument)[specific_info_key]
         return instrument_infos
 
 
