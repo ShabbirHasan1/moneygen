@@ -1,6 +1,14 @@
 from util.slack import SlackWebhook
 
 # TODO: Properly implement different levels of logging
+# TODO: Add process id support
+# @body: Use python logging module
+
+# TODO: Add TCPserver support
+# @body: Use python logging module
+
+# TODO: Add sendgrid support
+
 class Logger:
     def __init__():
         pass
