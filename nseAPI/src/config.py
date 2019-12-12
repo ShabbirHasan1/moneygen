@@ -25,3 +25,5 @@ class Config:
                     'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0',
                     'X-Requested-With': 'XMLHttpRequest'
                   }
+    SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
+    SENDGRID_API_ENDPOINT = 'https://api.sendgrid.com/v3/mail/send'
