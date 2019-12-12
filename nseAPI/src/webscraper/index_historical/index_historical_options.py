@@ -73,6 +73,8 @@ class IndexHistoricalOptions(IndexHistoricalBase):
                 + strike_price
         Logger.info(ajax_url)
         Logger.info(url)
+        # TODO: Remove selenium dependency, can be done through 'requests'
+        # @body : Use NSE_HEADERS to make requests, then requests would work just fine.
         driver.get(url)
 
         get_data_button = driver.find_element_by_xpath('//img[@src="/common/images/btn_go.gif"]')
