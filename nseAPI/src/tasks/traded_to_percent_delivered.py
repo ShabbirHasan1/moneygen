@@ -25,8 +25,8 @@ class TradedToPercentDelivered(threading.Thread):
     def run(self):
         
         # Check if we have the list in DB
-        gainers_list = list(self.get_stored_securities_from_db())
-        if len(gainers_list) == 0:
+        gl_objects_list = list(self.get_stored_securities_from_db())
+        if len(gl_objects_list) == 0:
             gainers_info_nse = NSEIndiaGLScraper(info_type='Gainers', view_type='All Securities')
             gainers_list_nse = gainers_info_nse.get_instruments(complete_info=False)
             gainers_info_rediff = RediffMoneyGLScraper(view_type='All')
@@ -38,15 +38,16 @@ class TradedToPercentDelivered(threading.Thread):
             self.store_percent_delivered_in_db(list(percent_delivered.values()))
         else:
             # Getting only the first object
-            gainers_list = gainers_list[0].listOfCompanies
+            percent_delivered = gl_objects_list[0].percentDelivered
+            gainers_list = gl_objects_list[0].listOfCompanies
 
         last_price = self.equity_scraper.get_info_all(gainers_list, specific_info_key='lastPrice')
         self.store_last_price_in_db(list(last_price.values()))
 
         table = PrettyTable(['Security', 'TradedToDelivered', 'LastPrice'])
 
-        for security in gainers_list:
-            table.add_row([security, percent_delivered[security], last_price[security]])
+        for security, percent_delivered in zip(gainers_list, percent_delivered):
+            table.add_row([security, percent_delivered, last_price[security]])
 
         Logger.info(message=table.get_html_string())
         Logger.info(message=table.get_string())
