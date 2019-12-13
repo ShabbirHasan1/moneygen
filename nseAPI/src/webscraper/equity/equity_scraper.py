@@ -12,6 +12,7 @@ class EquityScraper(EquityScraperBase):
         self.nse = Nse()
 
 
+    # TODO: modify to accept multiple keys for info dict to return data
     def get_info_specfic(self, instrument_symbol: str):
         url = 'https://nseindia.com/live_market/dynaContent/live_watch/get_quote/GetQuote.jsp?symbol=' \
                 + instrument_symbol
@@ -25,7 +26,7 @@ class EquityScraper(EquityScraperBase):
         return res_dict['data'][0]
 
 
-
+    # TODO: modify to accept multiple keys for info dict to return data
     def get_info_all(self, instruments: list, specific_info_key: str=None):
         instrument_infos = dict()
         for instrument in instruments:
@@ -34,5 +35,4 @@ class EquityScraper(EquityScraperBase):
             else:
                 instrument_infos[instrument] = self.get_info_specfic(instrument)[specific_info_key]
         return instrument_infos
-
 

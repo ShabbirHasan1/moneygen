@@ -1,5 +1,5 @@
 from webscraper.index_historical import IndexHistoricalOptions
-from tasks import NSEIndiaTradedToDelivered, RediffMoneyTradedToDelivered, TradedToPercentDelivered
+from tasks import TradedToPercentDelivered, TradedToPercentDeliveredReport
 from util.log import Logger
 from datetime import datetime
 
@@ -25,7 +25,8 @@ Logger.info('=====================Job Starting at: ' + str(datetime.now()))
 # t2.start()
 # t2.join()
 
-t = TradedToPercentDelivered()
+# t = TradedToPercentDelivered()
+t = TradedToPercentDeliveredReport()
 t.run()
 Logger.info('Complete!')
 Logger.info('=====================Job Completed at: ' + str(datetime.now()))
