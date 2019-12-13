@@ -2,6 +2,7 @@ from webscraper.index_historical import IndexHistoricalOptions
 from tasks import TradedToPercentDelivered, TradedToPercentDeliveredReport
 from util.log import Logger
 from datetime import datetime
+from dateutil.tz import *
 
 
 # TODO: Complete this and move to tasks module
@@ -12,21 +13,20 @@ from datetime import datetime
 # # print(index_historical_options_put.download_data_all())
 
 
+
 Logger.info('=====================Job Starting at: ' + str(datetime.now()))
-# t1 = NSEIndiaTradedToDelivered(push_output_to_slack=True)
-# t1.run()
 
-# t2 = RediffMoneyTradedToDelivered(number_of_instruments=10, push_output_to_slack=True)
-# t2.run()
+now = datetime.now().astimezone(tzlocal())
+end = now.replace(hour=15, minute=31)
 
+if now > end:
+    t1 = TradedToPercentDeliveredReport()
+    t1.start()
+    t1.join()
+else:
+    t1 = TradedToPercentDelivered()
+    t1.start()
+    t1.join()
 
-# t1.start()
-# t1.join()
-# t2.start()
-# t2.join()
-
-# t = TradedToPercentDelivered()
-t = TradedToPercentDeliveredReport()
-t.run()
 Logger.info('Complete!')
 Logger.info('=====================Job Completed at: ' + str(datetime.now()))
