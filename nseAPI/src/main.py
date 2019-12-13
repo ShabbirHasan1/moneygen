@@ -1,5 +1,5 @@
 from webscraper.index_historical import IndexHistoricalOptions
-from tasks import TradedToPercentDelivered, TradedToPercentDeliveredReport
+from tasks.traded_to_percent_delivered import TradedToPercentDelivered, TradedToPercentDeliveredReport
 from util.log import Logger
 from datetime import datetime
 from dateutil.tz import *

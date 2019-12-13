@@ -1,4 +1,4 @@
-from tasks import TradedToPercentDelivered
+from tasks.traded_to_percent_delivered import TradedToPercentDelivered
 from prettytable import PrettyTable
 from util.log import Logger
 
