@@ -4,9 +4,10 @@ from webscraper.gainer_loser_info import NSEIndiaGLScraper, RediffMoneyGLScraper
 from webscraper.equity import EquityScraper
 from db import MongoAdapter
 from db.models import GainerLoserInfoModel
-from datetime import datetime
+from datetime import datetime, date
 from config import Config
 from prettytable import PrettyTable
+from dateutil.tz import *
 
 
 class TradedToPercentDelivered(threading.Thread):
@@ -16,9 +17,13 @@ class TradedToPercentDelivered(threading.Thread):
         self.class_name = TradedToPercentDelivered.__name__
         self.slack_output=push_output_to_slack
         self.number_of_rediff_instruments = number_of_rediff_instruments
+        self.local_datetime = datetime.now().astimezone(tzlocal())
+        self.local_time = str(self.local_datetime).split(' ')[1].split('.')[0]
+        self.equity_scraper = EquityScraper()
         
 
     def run(self):
+        
         # Check if we have the list in DB
         gainers_list = list(self.get_stored_securities_from_db())
         if len(gainers_list) == 0:
@@ -27,39 +32,24 @@ class TradedToPercentDelivered(threading.Thread):
             gainers_info_rediff = RediffMoneyGLScraper(view_type='All')
             gainers_list_rediff = gainers_info_rediff.get_instruments(limit_number_of_instruments=self.number_of_rediff_instruments)
             gainers_list = list(set(gainers_list_nse).union(set(gainers_list_rediff)))
+            percent_delivered = self.equity_scraper.get_info_all(gainers_list, specific_info_key='deliveryToTradedQuantity')
             # Storing the list for future use
             self.store_securities_in_db(gainers_list)
+            self.store_percent_delivered_in_db(list(percent_delivered.values()))
         else:
             # Getting only the first object
             gainers_list = gainers_list[0].listOfCompanies
 
-        equity_scraper = EquityScraper()
-        percent_delivered = equity_scraper.get_info_all(gainers_list, specific_info_key='deliveryToTradedQuantity')
-        last_price = equity_scraper.get_info_all(gainers_list, specific_info_key='lastPrice')
+        last_price = self.equity_scraper.get_info_all(gainers_list, specific_info_key='lastPrice')
+        self.store_last_price_in_db(list(last_price.values()))
 
         table = PrettyTable(['Security', 'TradedToDelivered', 'LastPrice'])
 
         for security in gainers_list:
             table.add_row([security, percent_delivered[security], last_price[security]])
 
-        Logger.info(message=table.get_html_string(), push_to_sendgrid=True, sendgrid_subject=self.class_name)
-        Logger.info(message=table.get_string(), push_to_slack=True)
-
-        # ## Formatting output ##
-        # # TODO: Use python text tables to make it look good
-        # percent_delivered_str = '---------NSEIndia-------\ndeliveryToTradedQuantity--------\n'
-        # for item in percent_delivered:
-        #     percent_delivered_str = percent_delivered_str + '{} - {}\n'.format(item, percent_delivered[item])
-
-
-        # last_price_str = 'lastPrice--------\n'
-        # for item in last_price:
-        #     last_price_str = last_price_str + '{} - {}\n'.format(item, last_price[item])
-
-        # final_output = percent_delivered_str + '\n' + last_price_str
-        # ### ------- ###
-
-        # Logger.info(final_output, push_to_slack=self.slack_output)
+        Logger.info(message=table.get_html_string())
+        Logger.info(message=table.get_string())
 
 
 
@@ -70,7 +60,7 @@ class TradedToPercentDelivered(threading.Thread):
         gl_objects = GainerLoserInfoModel.objects.raw(
                 {
                 'createdBy': self.class_name,
-                'createdDate': datetime.now().strftime(Config.DATE_FORMAT)
+                'createdDate': str(date.today())
                 }
             )
         return gl_objects
@@ -83,5 +73,17 @@ class TradedToPercentDelivered(threading.Thread):
         GainerLoserInfoModel(
                 listOfCompanies=securities, 
                 createdBy=self.class_name,
-                createdDate=datetime.now().strftime(Config.DATE_FORMAT)
+                createdDate=str(date.today()),
+                createdTime=self.local_datetime
             ).save()
+
+    def store_percent_delivered_in_db(self, percent_delivered: list):
+        gl_object = list(self.get_stored_securities_from_db())[0]
+        gl_object.percentDelivered = percent_delivered
+        gl_object.save()
+
+    def store_last_price_in_db(self, last_price: list):
+        gl_object = list(self.get_stored_securities_from_db())[0]
+        gl_object.lastPrice[self.local_time] = last_price
+        gl_object.save()
+

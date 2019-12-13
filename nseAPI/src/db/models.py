@@ -5,9 +5,17 @@ from config import Config
 
 
 class GainerLoserInfoModel(MongoModel):
+    # TODO: add modifiedDate, modifiedBy in GainerLoserInfoModel
     listOfCompanies = fields.ListField()
+    percentDelivered = fields.ListField()
+    lastPrice = fields.DictField()
+    openPrice = fields.ListField()
+    highPrice = fields.ListField()
+    lowPrice = fields.ListField()
+    closePrice = fields.ListField()
     createdBy = fields.CharField()
     createdDate = fields.CharField()
+    createdTime = fields.DateTimeField()
 
     class Meta:
         write_concern = WriteConcern(j=True)
