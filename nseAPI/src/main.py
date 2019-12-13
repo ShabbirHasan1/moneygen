@@ -20,11 +20,11 @@ now = datetime.now().astimezone(tzlocal())
 end = now.replace(hour=15, minute=31)
 
 if now > end:
-    t1 = TradedToPercentDeliveredReport()
+    t1 = TradedToPercentDeliveredReport(slack=True, sendgrid=True)
     t1.start()
     t1.join()
 else:
-    t1 = TradedToPercentDelivered()
+    t1 = TradedToPercentDelivered(slack=True, sendgrid=True)
     t1.start()
     t1.join()
 

@@ -4,10 +4,12 @@ from util.log import Logger
 
 
 class TradedToPercentDeliveredReport(TradedToPercentDelivered):
-    def __init__(self, thread_id=None, thread_name=None, push_output_to_slack=False):
-        super().__init__(thread_id, thread_name, push_output_to_slack)
+    def __init__(self, thread_id=None, thread_name=None, slack=False, sendgrid=False):
+        super().__init__()
         self.gl_object = list(super().get_stored_securities_from_db())[0]
         self.class_name = TradedToPercentDeliveredReport.__name__
+        self.slack_notif = slack
+        self.sendgrid_notif = sendgrid
     
 
     def run(self):
@@ -24,8 +26,8 @@ class TradedToPercentDeliveredReport(TradedToPercentDelivered):
 
         report = self.generate_report()
 
-        Logger.info(report.get_string(),push_to_slack=True)
-        Logger.info(report.get_html_string(), push_to_slack=False, push_to_sendgrid=True, self.class_name)
+        Logger.info(report.get_string(),push_to_slack=self.slack_notif)
+        Logger.info(report.get_html_string(), push_to_sendgrid=self.sendgrid_notif, sendgrid_subject=self.class_name)
 
     def generate_report(self):
         # Creating table headers

@@ -12,14 +12,15 @@ from dateutil.tz import *
 
 class TradedToPercentDelivered(threading.Thread):
     # TODO: thread_id, thread_name to be used in task manager
-    def __init__(self, thread_id=None, thread_name=None, push_output_to_slack=False, number_of_rediff_instruments=10):
+    def __init__(self, thread_id=None, thread_name=None, slack=False, sendgrid=False, number_of_rediff_instruments=10):
         threading.Thread.__init__(self)
         self.class_name = TradedToPercentDelivered.__name__
-        self.slack_output=push_output_to_slack
         self.number_of_rediff_instruments = number_of_rediff_instruments
         self.local_datetime = datetime.now().astimezone(tzlocal())
         self.local_time = str(self.local_datetime).split(' ')[1].split('.')[0]
         self.equity_scraper = EquityScraper()
+        self.slack_notif = slack
+        self.sendgrid_notif = sendgrid
         
 
     def run(self):
@@ -49,8 +50,8 @@ class TradedToPercentDelivered(threading.Thread):
         for security, percent_delivered in zip(gainers_list, percent_delivered):
             table.add_row([security, percent_delivered, last_price[security]])
 
-        Logger.info(message=table.get_html_string())
-        Logger.info(message=table.get_string())
+        Logger.info(message=table.get_string(), push_to_slack=self.slack_notif)
+        Logger.info(message=table.get_html_string(), push_to_sendgrid=self.sendgrid_notif, sendgrid_subject=self.class_name)
 
 
 
