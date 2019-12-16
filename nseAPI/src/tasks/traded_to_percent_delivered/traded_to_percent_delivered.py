@@ -33,10 +33,11 @@ class TradedToPercentDelivered(threading.Thread):
             gainers_info_rediff = RediffMoneyGLScraper(view_type='All')
             gainers_list_rediff = gainers_info_rediff.get_instruments(limit_number_of_instruments=self.number_of_rediff_instruments)
             gainers_list = list(set(gainers_list_nse).union(set(gainers_list_rediff)))
-            percent_delivered = self.equity_scraper.get_info_all(gainers_list, specific_info_key='deliveryToTradedQuantity')
+            percent_delivered_dict = self.equity_scraper.get_info_all(gainers_list, specific_info_key='deliveryToTradedQuantity')
+            percent_delivered = list(percent_delivered_dict.values())
             # Storing the list for future use
             self.store_securities_in_db(gainers_list)
-            self.store_percent_delivered_in_db(list(percent_delivered.values()))
+            self.store_percent_delivered_in_db(percent_delivered)
         else:
             # Getting only the first object
             percent_delivered = gl_objects_list[0].percentDelivered
