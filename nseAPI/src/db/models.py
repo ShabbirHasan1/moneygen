@@ -13,6 +13,7 @@ class GainerLoserInfoModel(MongoModel):
     highPrice = fields.ListField()
     lowPrice = fields.ListField()
     closePrice = fields.ListField()
+    previousClosePrice = fields.ListField()
     createdBy = fields.CharField()
     createdDate = fields.CharField()
     createdTime = fields.DateTimeField()

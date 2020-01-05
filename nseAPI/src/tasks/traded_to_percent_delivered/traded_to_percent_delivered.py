@@ -35,9 +35,11 @@ class TradedToPercentDelivered(threading.Thread):
             gainers_list = list(set(gainers_list_nse).union(set(gainers_list_rediff)))
             percent_delivered_dict = self.equity_scraper.get_info_all(gainers_list, specific_info_key='deliveryToTradedQuantity')
             percent_delivered = list(percent_delivered_dict.values())
+            previous_close_prices = list(self.equity_scraper.get_info_all(gainers_list, specific_info_key='previousClose').values())
             # Storing the list for future use
             self.store_securities_in_db(gainers_list)
             self.store_percent_delivered_in_db(percent_delivered)
+            self.store_previous_close_price_in_db(previous_close_prices)
         else:
             # Getting only the first object
             percent_delivered = gl_objects_list[0].percentDelivered
@@ -88,5 +90,10 @@ class TradedToPercentDelivered(threading.Thread):
     def store_last_price_in_db(self, last_price: list):
         gl_object = list(self.get_stored_securities_from_db())[0]
         gl_object.lastPrice[self.local_time] = last_price
+        gl_object.save()
+
+    def store_previous_close_price_in_db(self, previous_close_prices: list):
+        gl_object = list(self.get_stored_securities_from_db())[0]
+        gl_object.previousClosePrice = previous_close_prices
         gl_object.save()
 
