@@ -21,3 +21,25 @@ class GainerLoserInfoModel(MongoModel):
     class Meta:
         write_concern = WriteConcern(j=True)
         connection_alias = Config.CONNECTION_ALIAS
+
+
+class KiteSimulatorStateModel(MongoModel):
+    funds = fields.IntegerField()
+    companies = fields.ListField()
+    previousClosePrice = fields.ListField()
+    fundsPerCompany = fields.ListField()
+    numberOfStocksPerCompany = fields.ListField()
+    buyPrice = fields.ListField()
+    buyQuantity = fields.ListField()
+    profitSlab = fields.ListField()
+    profitablePrice = fields.ListField()
+    profitDifference = fields.ListField()
+    sellPrice = fields.ListField()
+    pnl = fields.ListField()
+    createdBy = fields.CharField()
+    createdDate = fields.CharField()
+    createdTime = fields.DateTimeField()
+
+    class Meta:
+        write_concern = WriteConcern(j=True)
+        connection_alias = Config.CONNECTION_ALIAS
