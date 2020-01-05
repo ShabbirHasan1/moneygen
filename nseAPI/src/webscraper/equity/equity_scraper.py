@@ -14,7 +14,7 @@ class EquityScraper(EquityScraperBase):
 
     # TODO: modify to accept multiple keys for info dict to return data
     def get_info_specfic(self, instrument_symbol: str):
-        url = 'https://nseindia.com/live_market/dynaContent/live_watch/get_quote/GetQuote.jsp?symbol=' \
+        url = 'https://www1.nseindia.com/live_market/dynaContent/live_watch/get_quote/GetQuote.jsp?symbol=' \
                 + instrument_symbol
 
         # res = SeleniumDispatcher(headless=False, selenium_wire=True).get_response(url)

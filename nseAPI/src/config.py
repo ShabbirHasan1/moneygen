@@ -20,7 +20,7 @@ class Config:
     DATE_FORMAT = '%Y-%m-%d'
     NSE_HEADERS = {'Accept': '*/*',
                     'Accept-Language': 'en-US,en;q=0.5',
-                    'Host': 'nseindia.com',
+                    'Host': 'www1.nseindia.com',
                     'Referer': "https://www.nseindia.com/live_market/dynaContent/live_watch/get_quote/GetQuote.jsp?symbol=INFY&illiquid=0&smeFlag=0&itpFlag=0",
                     'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0',
                     'X-Requested-With': 'XMLHttpRequest'

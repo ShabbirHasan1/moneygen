@@ -33,7 +33,7 @@ class NSEIndiaGLScraper(BaseGLScraper):
     def get_instruments(self, complete_info=False):
         # TODO: add other 'view type' and 'info_type' support as well
         # @body Rewrite this part of code using nsetools 
-        url = 'https://www.nseindia.com/live_market/dynaContent/live_analysis/'\
+        url = 'https://www1.nseindia.com/live_market/dynaContent/live_analysis/'\
                 + self.info_type.lower()\
                 + '/'\
                 + self.view_type\
