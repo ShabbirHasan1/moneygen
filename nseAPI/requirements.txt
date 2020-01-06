@@ -5,6 +5,7 @@ dateutils==0.6.7
 dnspython==1.16.0
 idna==2.8
 nsetools==1.0.10
+numpy==1.18.0
 pep8==1.7.1
 prettytable==0.7.2
 pymodm==0.4.2
