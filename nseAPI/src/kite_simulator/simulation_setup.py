@@ -60,8 +60,6 @@ class SimulationSetup:
                 profit_slab[price] = 10
         self.kite_state.profitSlab = profit_slab
         self.kite_state.save()
-        self.kite_state.profitDifference = profit_slab.values()
-        self.kite_state.save()
 
 
     def get_stored_gainer_loser_info_from_db(self):
