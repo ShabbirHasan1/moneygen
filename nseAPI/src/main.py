@@ -30,10 +30,9 @@ if now > market_close:
 
 
 if now >= market_preopen_open and now <= market_close:
-    t1 = TradedToPercentDelivered(slack=False, sendgrid=False)
+    t1 = TradedToPercentDelivered(slack=True, sendgrid=True)
     t1.start()
     t1.join()
-    kite_sim_setup = SimulationSetup()
 
 
 
