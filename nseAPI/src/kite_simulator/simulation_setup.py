@@ -1,4 +1,5 @@
 from db.models import KiteSimulatorStateModel, GainerLoserInfoModel
+from db import MongoAdapter
 from datetime import datetime, date
 from config import Config
 import numpy as np
@@ -9,13 +10,13 @@ class SimulationSetup:
         self.class_name = SimulationSetup.__name__
         mongo_adapter = MongoAdapter()
         self.kite_state = KiteSimulatorStateModel(createdDate=str(date.today()), createdBy=self.class_name)
-        self.funds = funds
-        gl_object = get_stored_gainer_loser_info_from_db()[0]
+        self.funds = int(funds)
+        gl_object = self.get_stored_gainer_loser_info_from_db()[0]
         self.get_and_store_company_list(gl_object.listOfCompanies)
         self.get_and_store_funds()
         self.get_and_store_previous_close_price(gl_object.previousClosePrice)
-        self.calc_and_store_number_of_stocks_per_company()
         self.calc_and_store_funds_per_company()
+        self.calc_and_store_number_of_stocks_per_company()
         self.calc_and_store_profit_slab_for_stocks()
 
 
@@ -44,20 +45,20 @@ class SimulationSetup:
 
 
     def calc_and_store_profit_slab_for_stocks(self):
-        profit_slab = dict()
+        profit_slab = list()
         for price in self.kite_state.previousClosePrice:
-            if price <= 1:
-                profit_slab[price] = 0.05
-            elif price > 1 and price <= 10:
-                profit_slab[price] = 0.5
-            elif price > 10 and price <=100:
-                profit_slab[price] = 1
-            elif price > 100 and price <= 200:
-                profit_slab[price] = 2
-            elif price > 200 and price <=500:
-                profit_slab[price] = 5
+            if float(price) <= 1:
+                profit_slab.append(0.05)
+            elif float(price) > 1 and float(price) <= 10:
+                profit_slab.append(0.5)
+            elif float(price) > 10 and float(price) <=100:
+                profit_slab.append(1)
+            elif float(price) > 100 and float(price) <= 200:
+                profit_slab.append(2)
+            elif float(price) > 200 and float(price) <=500:
+                profit_slab.append(5)
             else:
-                profit_slab[price] = 10
+                profit_slab.append(10)
         self.kite_state.profitSlab = profit_slab
         self.kite_state.save()
 

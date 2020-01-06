@@ -31,7 +31,7 @@ class KiteSimulatorStateModel(MongoModel):
     numberOfStocksPerCompany = fields.ListField()
     buyPrice = fields.ListField()
     buyQuantity = fields.ListField()
-    profitSlab = fields.DictField()
+    profitSlab = fields.ListField()
     profitablePrice = fields.ListField()
     profitDifference = fields.ListField()
     sellPrice = fields.ListField()
