@@ -28,3 +28,4 @@ class Config:
     SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
     SENDGRID_API_ENDPOINT = 'https://api.sendgrid.com/v3/mail/send'
     SENDGRID_TO_EMAIL = os.getenv('SENDGRID_TO_EMAIL')
+    KITE_FUNDS = os.getenv('KITE_FUNDS')
