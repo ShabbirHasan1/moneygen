@@ -21,10 +21,7 @@ if now >= market_preopen_open and now <= market_open:
 
 if now >= market_open and now <= market_close:
     ## Run the ticker simulation here
-
-
-
-
+    pass
 
 Logger.info('Complete!')
 Logger.info('=====================Kite Job Completed at: ' + str(datetime.now()))
