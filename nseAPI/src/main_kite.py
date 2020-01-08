@@ -24,4 +24,4 @@ if now >= market_open and now <= market_close:
     pass
 
 Logger.info('Complete!')
-Logger.info('=====================Kite Job Completed at: ' + str(datetime.now()))
+Logger.info('=====================Kite Job Completed at: ' + str(datetime.now()), push_to_slack=True)
