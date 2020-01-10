@@ -31,3 +31,6 @@ class Config:
     KITE_FUNDS = os.getenv('KITE_FUNDS')
     KITE_API_KEY = os.getenv('KITE_API_KEY')
     KITE_API_SECRET = os.getenv('KITE_API_SECRET')
+    KITE_USER_ID = os.getenv('KITE_USER_ID')
+    KITE_PASSWORD = os.getenv('KITE_PASSWORD')
+    KITE_PIN = os.getenv('KITE_PIN')

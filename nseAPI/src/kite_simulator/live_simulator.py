@@ -2,14 +2,19 @@ import logging
 from kiteconnect import KiteConnect
 from kiteconnect import KiteTicker
 from config import Config
+from util import SeleniumDispatcher
+from selenium.webdriver.common.keys import Keys
+
 
 class LiveSimulator:
-    def __init__(self, api_key=Config.KITE_API_KEY, api_secret=Config.KITE_API_SECRET):
+    def __init__(self, api_key=Config.KITE_API_KEY, api_secret=Config.KITE_API_SECRET, username = Config.KITE_USER_ID,
+        password=Config.KITE_PASSWORD, pin=Config.KITE_PIN):
+        self.username = username
+        self.password = password
+        self.pin = pin
         self.kite = KiteConnect(api_key=api_key)
-        # TODO: Use selenium to use this URL and get request token
-        print(kite.login_url())
-        temp_req_token = '1111xxx'
-        data = self.kite.generate_session(temp_req_token, api_secret=api_secret)
+        req_token = self.get_request_token()
+        data = self.kite.generate_session(req_token, api_secret=api_secret)
         self.access_token = data["access_token"]
         self.kite.set_access_token(self.access_token)
 
@@ -59,6 +64,21 @@ class LiveSimulator:
         ticker.on_connect = on_connect
         ticker.on_close = on_close
 
-        ticker.connect()
+        ticker.connect()    
 
+    def get_request_token(self):
+        selenium = SeleniumDispatcher(headless=False)
+        driver = selenium.get_driver()
+        driver.get(self.kite.login_url())
+        username_field = driver.find_element_by_xpath('//input[@placeholder="User ID"]')
+        username_field.send_keys(self.username)
+        password_field = driver.find_element_by_xpath('//input[@placeholder="Password"]')
+        password_field.send_keys(self.password)
+        password_field.send_keys(Keys.ENTER)
+        pin_field = driver.find_element_by_xpath('//input[@placeholder="PIN"]')
+        pin_field = driver.send_keys(self.pin)
+        pin_field.send_keys(Keys.ENTER)
+        url = driver.current_url
+        token = url.split('&action')[0].split('request_token=')[1]
+        return token
         

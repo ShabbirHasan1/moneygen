@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 from config import Config
-from pymodm.connection import connect
+
 
 
 
