@@ -2,7 +2,6 @@ import threading
 from util.log import Logger
 from webscraper.gainer_loser_info import NSEIndiaGLScraper, RediffMoneyGLScraper
 from webscraper.equity import EquityScraper
-from db import MongoAdapter
 from db.models import GainerLoserInfoModel
 from datetime import datetime, date
 from config import Config
@@ -61,7 +60,6 @@ class TradedToPercentDelivered(threading.Thread):
     def get_stored_securities_from_db(self):
         ''' Gets securities stored on same day
         '''
-        mongo_adapter = MongoAdapter()
         gl_objects = GainerLoserInfoModel.objects.raw(
                 {
                 'createdBy': self.class_name,
@@ -74,7 +72,6 @@ class TradedToPercentDelivered(threading.Thread):
     def store_securities_in_db(self, securities: list):
         ''' Stores securities with date and jobname
         '''
-        mongo_adapter = MongoAdapter()
         GainerLoserInfoModel(
                 listOfCompanies=securities, 
                 createdBy=self.class_name,

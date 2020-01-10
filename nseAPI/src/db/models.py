@@ -1,6 +1,11 @@
 from pymodm import MongoModel, fields
 from pymongo.write_concern import WriteConcern
 from config import Config
+from db import MongoAdapter
+
+
+# PyMODM connection
+connect(MongoAdapter().get_connection_string(), alias=Config.CONNECTION_ALIAS)
 
 
 

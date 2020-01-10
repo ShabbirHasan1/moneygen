@@ -1,5 +1,4 @@
 from db.models import KiteSimulatorStateModel, GainerLoserInfoModel
-from db import MongoAdapter
 from datetime import datetime, date
 from config import Config
 import numpy as np
@@ -8,7 +7,6 @@ import numpy as np
 class SimulationSetup:
     def __init__(self, funds=Config.KITE_FUNDS):
         self.class_name = SimulationSetup.__name__
-        mongo_adapter = MongoAdapter()
         self.kite_state = KiteSimulatorStateModel(createdDate=str(date.today()), createdBy=self.class_name)
         self.funds = int(funds)
         gl_object = self.get_stored_gainer_loser_info_from_db()[0]
