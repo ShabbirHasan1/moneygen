@@ -4,12 +4,12 @@ from kiteconnect import KiteTicker
 from config import Config
 
 class LiveSimulator:
-    def __init__(self):
-        self.kite = KiteConnect(api_key=Config.KITE_API_KEY)
+    def __init__(self, api_key=Config.KITE_API_KEY, api_secret=Config.KITE_API_SECRET):
+        self.kite = KiteConnect(api_key=api_key)
         # TODO: Use selenium to use this URL and get request token
         print(kite.login_url())
         temp_req_token = '1111xxx'
-        data = self.kite.generate_session(temp_req_token, api_secret=Config.KITE_API_SECRET)
+        data = self.kite.generate_session(temp_req_token, api_secret=api_secret)
         self.access_token = data["access_token"]
         self.kite.set_access_token(self.access_token)
 

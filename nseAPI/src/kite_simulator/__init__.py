@@ -1,1 +1,2 @@
 from kite_simulator.simulation_setup import SimulationSetup
+from kite_simulator.live_simulator import LiveSimulator
