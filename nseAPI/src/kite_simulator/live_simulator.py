@@ -5,6 +5,9 @@ from config import Config
 from util import SeleniumDispatcher
 from selenium.webdriver.common.keys import Keys
 import time
+from db.models import KiteSimulatorStateModel
+from datetime import datetime, date
+import numpy as np
 
 
 class LiveSimulator:
@@ -13,11 +16,13 @@ class LiveSimulator:
         self.username = username
         self.password = password
         self.pin = pin
+        self.api_key = api_key
         self.kite = KiteConnect(api_key=api_key)
         req_token = self.get_request_token()
         data = self.kite.generate_session(req_token, api_secret=api_secret)
         self.access_token = data["access_token"]
         self.kite.set_access_token(self.access_token)
+        self.kite_state = None
 
 
     def get_instrument_tokens(self, instrument_list: list):
@@ -30,34 +35,59 @@ class LiveSimulator:
                     break
         return instrument_token_list
 
-    def start_simulator(self, instrument_token_list):
+    def start_simulator(self):
+        self.kite_state = KiteSimulatorStateModel.objects.raw({'createdDate': str(date.today())})[0]
+        self.sim_init()
+        self.simulate_market()
+        
+    
+    def sim_init(self):
         # Initialise
-        ticker = KiteTicker(Config.KITE_API_KEY, self.access_token)
-        tick_count = 0
+        ticker = KiteTicker(self.api_key, self.access_token)
+        
+
+        instrument_tokens = self.kite_state.companyTokens
+        profit_slab = self.kite_state.profitSlab
+        buy_dict = dict()
+        # Defining the callbacks
+        def on_ticks(tick, ticks_info):
+            global buy_dict
+            for tick_info in ticks_info:
+                buy_dict[tick_info['instrument_token']] = tick_info['last_price']
+            tick.close()
+
+        def on_connect(tick, response):
+            global instrument_token_list
+            tick.subscribe(instrument_token_list)
+
+        def on_close(tick, code, reason):
+            tick.stop()
+
+        # Assign the callbacks.
+        ticker.on_ticks = on_ticks
+        ticker.on_connect = on_connect
+        ticker.on_close = on_close
+
+        ticker.connect()
+
+        self.kite_state.buyPrice = np.array(list(buy_dict.values())).astype(np.float)
+        self.kite_state.save()
+
+    def simulate_market(self):
+        # Initialise
+        ticker = KiteTicker(self.api_key, self.access_token)
         
         # Defining the callbacks
-        # TODO: Modify in ticks callback to place virtual trades on realtime prices
         def on_ticks(tick, tick_info):
-            # Callback to receive ticks.
-            global tick_count
-            print("Ticks: {}".format(ticks))
-            tick_count = tick_count + 1
-            print("Length: {}".format(tick_count))
-            # TODO: modify simulator stopping logic
-            if tick_count > 5:
+            global process_tick
+            if not process_tick(tick, tick_info):
                 tick.close()
 
         def on_connect(tick, response):
-            # Callback on successful connect.
-            # Subscribe to a list of instrument_tokens (RELIANCE and ACC here).
-            #tick.subscribe([134657, 408065])
+            global instrument_token_list
             tick.subscribe(instrument_token_list)
-            # Set RELIANCE to tick in `full` mode.
-            # tick.set_mode(tick.MODE_FULL, [408065])
 
         def on_close(tick, code, reason):
-            # On connection close stop the main loop
-            # Reconnection will not happen after executing `tick.stop()`
             tick.stop()
 
         # Assign the callbacks.
@@ -86,4 +116,11 @@ class LiveSimulator:
         token = url.split('&action')[0].split('request_token=')[1]
         selenium.destroy_driver()
         return token
+
+    def process_tick(self, tick, tick_info):
+        if len(tick_info) == 0:
+            return False
+        
+
+        
         
