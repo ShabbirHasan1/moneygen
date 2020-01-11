@@ -16,13 +16,12 @@ market_preopen_open = now.replace(hour=9, minute=0)
 market_preopen_close = market_open
 
 
-# if now >= market_preopen_open and now <= market_open:
-#     kite_sim_setup = SimulationSetup()
+if now >= market_preopen_open and now <= market_open:
+    kite_sim_setup = SimulationSetup()
 
-# if now >= market_open and now <= market_close:
-    ## Run the ticker simulation here
-simulator = LiveSimulator()
-print(simulator.get_instrument_tokens(['BPCL','INFY']))
+if now >= market_open and now <= market_close:
+    # Run the ticker simulation here
+    pass
 
 Logger.info('Complete!')
 Logger.info('=====================Kite Job Completed at: ' + str(datetime.now()), push_to_slack=True)
