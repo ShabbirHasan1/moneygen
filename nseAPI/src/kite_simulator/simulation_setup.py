@@ -2,6 +2,7 @@ from db.models import KiteSimulatorStateModel, GainerLoserInfoModel
 from datetime import datetime, date
 from config import Config
 import numpy as np
+from .live_simulator import LiveSimulator
 
 
 class SimulationSetup:
@@ -11,6 +12,7 @@ class SimulationSetup:
         self.funds = int(funds)
         gl_object = self.get_stored_gainer_loser_info_from_db()[0]
         self.get_and_store_company_list(gl_object.listOfCompanies)
+        self.get_and_store_company_tokens(gl_object.listOfCompanies)
         self.get_and_store_funds()
         self.get_and_store_previous_close_price(gl_object.previousClosePrice)
         self.calc_and_store_funds_per_company()
@@ -18,16 +20,20 @@ class SimulationSetup:
         self.calc_and_store_profit_slab_for_stocks()
 
 
-    def get_and_store_company_list(self, listOfCompanies):
-        self.kite_state.companies = listOfCompanies
+    def get_and_store_company_list(self, list_of_companies):
+        self.kite_state.companies = list_of_companies
+        self.kite_state.save()
+
+    def get_and_store_company_tokens(self, list_of_companies):
+        self.kite_state.companyTokens = np.array(list(LiveSimulator().get_instrument_tokens(list_of_companies).values())).astype(np.int64).tolist()
         self.kite_state.save()
 
     def get_and_store_funds(self):
         self.kite_state.funds = self.funds
         self.kite_state.save()
 
-    def get_and_store_previous_close_price(self, previousClosePrice):
-        self.kite_state.previousClosePrice = previousClosePrice
+    def get_and_store_previous_close_price(self, previous_close_price):
+        self.kite_state.previousClosePrice = previous_close_price
         self.kite_state.save()
 
     def calc_and_store_funds_per_company(self):

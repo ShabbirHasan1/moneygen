@@ -32,6 +32,7 @@ class GainerLoserInfoModel(MongoModel):
 class KiteSimulatorStateModel(MongoModel):
     funds = fields.IntegerField()
     companies = fields.ListField()
+    companyTokens = fields.ListField()
     previousClosePrice = fields.ListField()
     fundsPerCompany = fields.IntegerField()
     numberOfStocksPerCompany = fields.ListField()
