@@ -13,7 +13,7 @@ import os
 
 
 class SeleniumDispatcher:
-    def __init__(self, headless: bool = False, download_path: str = None, selenium_wire: bool = False, driver_type='firefox'):
+    def __init__(self, headless: bool = False, download_path: str = None, selenium_wire: bool = False, driver_type='chrome'):
         self.__driver = None
         if driver_type == 'firefox':
             self.__get_firefox(headless=headless, download_path=download_path, selenium_wire=selenium_wire)
@@ -55,9 +55,9 @@ class SeleniumDispatcher:
             options.add_argument("--headless")
         
         if selenium_wire:
-            self.__driver = wiredriver.Chrome(executable_path = Config.SELENIUM_DRIVER_EXEC_PATH, chrome_options = options)
+            self.__driver = wiredriver.Chrome(executable_path = Config.SELENIUM_DRIVER_CHROME_EXEC_PATH, chrome_options = options, seleniumwire_options=wire_options)
         else:    
-            self.__driver = webdriver.Chrome(executable_path = Config.SELENIUM_DRIVER_EXEC_PATH, chrome_options = options, seleniumwire_options=wire_options)
+            self.__driver = webdriver.Chrome(executable_path = Config.SELENIUM_DRIVER_CHROME_EXEC_PATH, chrome_options = options)
 
         if download_path:
             self.__driver.command_executor._commands["send_command"] = ("POST", '/session/$sessionId/chromium/send_command')
@@ -73,9 +73,9 @@ class SeleniumDispatcher:
         }
         # TODO: Enable headless mode for firefox
         if selenium_wire:
-            self.__driver = wiredriver.Firefox(executable_path = os.path.join(Config.SELENIUM_DRIVER_BASE_PATH, 'geckodriver'))
+            self.__driver = wiredriver.Firefox(executable_path = Config.SELENIUM_DRIVER_FIREFOX_EXEC_PATH, seleniumwire_options=wire_options)
         else:    
-            self.__driver = webdriver.Firefox(executable_path = os.path.join(Config.SELENIUM_DRIVER_BASE_PATH, 'geckodriver'), seleniumwire_options=wire_options)
+            self.__driver = webdriver.Firefox(executable_path = Config.SELENIUM_DRIVER_FIREFOX_EXEC_PATH)
 
         # TODO: Enable downloads in firefox
         # if download_path:
@@ -99,5 +99,8 @@ class SeleniumDispatcher:
         data = request.response.body.decode("utf-8")
         self.__driver.close()
         return data
+
+    def destroy_driver(self):
+        self.__driver.close()
 
     

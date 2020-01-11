@@ -9,8 +9,10 @@ class Config:
     DOWNLOAD_DIRECTORY = '/Users/mayank.gupta/Moneygen/nseAPI/downloads'
     # TODO: Change configuration for geckodriver
     SELENIUM_DRIVER_BASE_PATH = 'chromedriver'
-    SELENIUM_DRIVER_EXEC_PATH = \
-        os.path.join(SELENIUM_DRIVER_BASE_PATH, sys.platform)
+    SELENIUM_DRIVER_CHROME_EXEC_PATH = \
+        os.path.join(SELENIUM_DRIVER_BASE_PATH, 'chromedriver_'+sys.platform)
+    SELENIUM_DRIVER_FIREFOX_EXEC_PATH = \
+        os.path.join(SELENIUM_DRIVER_BASE_PATH, 'geckodriver_'+sys.platform)
     SLACK_WEBHOOK = os.getenv('SLACK_WEBHOOK')
     MONGO_DB = 'nse_api'
     MONGO_AUTH_DB = os.getenv('MONGO_AUTH_DB')

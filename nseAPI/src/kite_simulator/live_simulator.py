@@ -4,6 +4,7 @@ from kiteconnect import KiteTicker
 from config import Config
 from util import SeleniumDispatcher
 from selenium.webdriver.common.keys import Keys
+import time
 
 
 class LiveSimulator:
@@ -67,18 +68,22 @@ class LiveSimulator:
         ticker.connect()    
 
     def get_request_token(self):
-        selenium = SeleniumDispatcher(headless=False)
+        selenium = SeleniumDispatcher(headless=True)
         driver = selenium.get_driver()
         driver.get(self.kite.login_url())
-        username_field = driver.find_element_by_xpath('//input[@placeholder="User ID"]')
+        time.sleep(4)
+        username_field = driver.find_element_by_xpath("//input[@type='text']")
         username_field.send_keys(self.username)
-        password_field = driver.find_element_by_xpath('//input[@placeholder="Password"]')
+        password_field = driver.find_element_by_xpath("//input[@type='password']")
         password_field.send_keys(self.password)
         password_field.send_keys(Keys.ENTER)
-        pin_field = driver.find_element_by_xpath('//input[@placeholder="PIN"]')
-        pin_field = driver.send_keys(self.pin)
+        time.sleep(4)
+        pin_field = driver.find_element_by_xpath("//input[@type='password']")
+        pin_field.send_keys(self.pin)
         pin_field.send_keys(Keys.ENTER)
+        time.sleep(4)
         url = driver.current_url
         token = url.split('&action')[0].split('request_token=')[1]
+        selenium.destroy_driver()
         return token
         
