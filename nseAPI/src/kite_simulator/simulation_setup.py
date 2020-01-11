@@ -33,7 +33,7 @@ class SimulationSetup:
         self.kite_state.save()
 
     def get_and_store_previous_close_price(self, previous_close_price):
-        self.kite_state.previousClosePrice = previous_close_price
+        self.kite_state.previousClosePrice = np.array(previous_close_price).astype(np.float).tolist()
         self.kite_state.save()
 
     def calc_and_store_funds_per_company(self):
@@ -43,7 +43,7 @@ class SimulationSetup:
         self.kite_state.save()
 
     def calc_and_store_number_of_stocks_per_company(self):
-        previous_close_price_float_array = np.array(self.kite_state.previousClosePrice).astype(np.float)
+        previous_close_price_float_array = np.array(self.kite_state.previousClosePrice)
         self.kite_state.numberOfStocksPerCompany = np.floor(self.funds_per_company/previous_close_price_float_array - 1).tolist()
         self.kite_state.save()
 
@@ -51,15 +51,15 @@ class SimulationSetup:
     def calc_and_store_profit_slab_for_stocks(self):
         profit_slab = list()
         for price in self.kite_state.previousClosePrice:
-            if float(price) <= 1:
+            if price <= 1:
                 profit_slab.append(0.05)
-            elif float(price) > 1 and float(price) <= 10:
+            elif price > 1 and price <= 10:
                 profit_slab.append(0.5)
-            elif float(price) > 10 and float(price) <=100:
+            elif price > 10 and price <=100:
                 profit_slab.append(1)
-            elif float(price) > 100 and float(price) <= 200:
+            elif price > 100 and price <= 200:
                 profit_slab.append(2)
-            elif float(price) > 200 and float(price) <=500:
+            elif price > 200 and price <=500:
                 profit_slab.append(5)
             else:
                 profit_slab.append(10)
