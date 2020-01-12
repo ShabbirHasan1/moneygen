@@ -8,11 +8,14 @@ import time
 from db.models import KiteSimulatorStateModel
 from datetime import datetime, date
 import numpy as np
+from datetime import datetime
+from dateutil.tz import *
 
 
 class LiveSimulator:
     def __init__(self, api_key=Config.KITE_API_KEY, api_secret=Config.KITE_API_SECRET, username = Config.KITE_USER_ID,
-        password=Config.KITE_PASSWORD, pin=Config.KITE_PIN):
+        password=Config.KITE_PASSWORD, pin=Config.KITE_PIN,
+        end_hour=Config.KITE_SIMULATION_END_HOUR, end_minute=Config.KITE_SIMULATION_END_MINUTE):
         self.username = username
         self.password = password
         self.pin = pin
@@ -22,7 +25,8 @@ class LiveSimulator:
         data = self.kite.generate_session(req_token, api_secret=api_secret)
         self.access_token = data["access_token"]
         self.kite.set_access_token(self.access_token)
-        self.kite_state = None
+        self.kite_state = KiteSimulatorStateModel.objects.raw({'createdDate': str(date.today())})[0]
+        self.end_time = datetime.now().astimezone(tzlocal()).replace(hour=end_hour, minute=end_minute)
 
 
     def get_instrument_tokens(self, instrument_list: list):
@@ -35,11 +39,6 @@ class LiveSimulator:
                     break
         return instrument_token_list
 
-    def start_simulator(self):
-        self.kite_state = KiteSimulatorStateModel.objects.raw({'createdDate': str(date.today())})[0]
-        self.sim_init()
-        self.simulate_market()
-        
     
     def sim_init(self):
         # Initialise
@@ -53,6 +52,7 @@ class LiveSimulator:
         def on_ticks(tick, ticks_info):
             global buy_dict
             for tick_info in ticks_info:
+                # TODO: Check if the order is correct
                 buy_dict[tick_info['instrument_token']] = tick_info['last_price']
             tick.close()
 
@@ -71,21 +71,47 @@ class LiveSimulator:
         ticker.connect()
 
         self.kite_state.buyPrice = np.array(list(buy_dict.values())).astype(np.float)
+        self.kite_state.profitablePrice = np.array(list(self.kite_state.buyPrice)) + np.array(self.kite_state.profitSlab).astype(np.float)
         self.kite_state.save()
 
     def simulate_market(self):
         # Initialise
         ticker = KiteTicker(self.api_key, self.access_token)
+        end_time = self.end_time
+        instrument_tokens = self.kite_state.companyTokens
+        sell_dict = dict()
+        profitable_dict = dict()
         
+        # Building profitable dict
+        for token, profitable_price in zip(instrument_tokens, self.kite_state.profitablePrice):
+            profitable_dict[token] = profitable_price
+
         # Defining the callbacks
-        def on_ticks(tick, tick_info):
-            global process_tick
-            if not process_tick(tick, tick_info):
+        def on_ticks(tick, ticks_info):
+            if len(ticks_info) == 0:
                 tick.close()
+            global end_time
+            global sell_dict
+            global profitable_dict
+
+            now = datetime.now().astimezone(tzlocal())
+            if now <= end_time:
+                for tick_info in ticks_info:
+                    if tick_info['last_price'] >= profitable_dict[tick_info['instrument_token']]:
+                        # TODO: Check if the order is correct
+                        sell_dict[tick_info['instrument_token']] = tick_info['last_price']
+                        tick.unsubscribe([tick_info['instrument_token']])
+                    else:
+                        continue
+            else:
+                for tick_info in ticks_info:
+                    sell_dict[tick_info['instrument_token']] = tick_info['last_price']
+                tick.close()
+                
 
         def on_connect(tick, response):
-            global instrument_token_list
-            tick.subscribe(instrument_token_list)
+            global instrument_tokens
+            tick.subscribe(instrument_tokens)
 
         def on_close(tick, code, reason):
             tick.stop()
