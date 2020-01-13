@@ -10,6 +10,9 @@ from datetime import datetime, date
 import numpy as np
 from datetime import datetime
 from dateutil.tz import *
+import urllib.parse as urlparse
+from urllib.parse import parse_qs
+
 
 
 class LiveSimulator:
@@ -50,15 +53,15 @@ class LiveSimulator:
         buy_dict = dict()
         # Defining the callbacks
         def on_ticks(tick, ticks_info):
-            global buy_dict
+            # global buy_dict
             for tick_info in ticks_info:
                 # TODO: Check if the order is correct
                 buy_dict[tick_info['instrument_token']] = tick_info['last_price']
             tick.close()
 
         def on_connect(tick, response):
-            global instrument_token_list
-            tick.subscribe(instrument_token_list)
+            # global instrument_tokens
+            tick.subscribe(self.kite_state.companyTokens)
 
         def on_close(tick, code, reason):
             tick.stop()
@@ -70,8 +73,10 @@ class LiveSimulator:
 
         ticker.connect()
 
-        self.kite_state.buyPrice = np.array(list(buy_dict.values())).astype(np.float)
-        self.kite_state.profitablePrice = np.array(list(self.kite_state.buyPrice)) + np.array(self.kite_state.profitSlab).astype(np.float)
+        buy_price = np.array(list(buy_dict.values()))
+        self.kite_state.buyPrice = buy_price.tolist()
+        self.kite_state.save()
+        self.kite_state.profitablePrice = (np.array(buy_price) + np.array(self.kite_state.profitSlab)).tolist()
         self.kite_state.save()
 
     def simulate_market(self):
@@ -139,7 +144,9 @@ class LiveSimulator:
         pin_field.send_keys(Keys.ENTER)
         time.sleep(4)
         url = driver.current_url
-        token = url.split('&action')[0].split('request_token=')[1]
+        parsed = urlparse.urlparse(url)
+        token = parse_qs(parsed.query)['request_token'][0]
+        print(token)
         selenium.destroy_driver()
         return token
 
