@@ -55,7 +55,7 @@ class LiveSimulator:
         def on_ticks(tick, ticks_info):
             # global buy_dict
             for tick_info in ticks_info:
-                # TODO: Check if the order is correct
+                # TODO : Check if the order is correct
                 buy_dict[tick_info['instrument_token']] = tick_info['last_price']
             tick.close()
 
@@ -103,7 +103,7 @@ class LiveSimulator:
             if now <= end_time:
                 for tick_info in ticks_info:
                     if tick_info['last_price'] >= profitable_dict[tick_info['instrument_token']]:
-                        # TODO: Check if the order is correct
+                        # TODO : Check if the order is correct
                         sell_dict[tick_info['instrument_token']] = tick_info['last_price']
                         tick.unsubscribe([tick_info['instrument_token']])
                     else:
