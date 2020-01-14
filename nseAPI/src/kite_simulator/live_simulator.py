@@ -46,8 +46,6 @@ class LiveSimulator:
     def sim_init(self):
         # Initialise
         ticker = KiteTicker(self.api_key, self.access_token)
-        
-
         instrument_tokens = self.kite_state.companyTokens
         profit_slab = self.kite_state.profitSlab
         buy_dict = dict()
@@ -73,31 +71,31 @@ class LiveSimulator:
 
         ticker.connect()
 
-        buy_price = np.array(list(buy_dict.values()))
-        self.kite_state.buyPrice = buy_price.tolist()
+        # Building buy list
+        buy_list = list()
+        for token in instrument_tokens:
+            buy_list.append(buy_dict[token])
+        self.kite_state.buyPrice = buy_list
         self.kite_state.save()
-        self.kite_state.profitablePrice = (np.array(buy_price) + np.array(self.kite_state.profitSlab)).tolist()
+        self.kite_state.profitablePrice = (np.array(buy_list) + np.array(self.kite_state.profitSlab)).tolist()
         self.kite_state.save()
 
     def simulate_market(self):
         # Initialise
         ticker = KiteTicker(self.api_key, self.access_token)
-        end_time = self.end_time
         instrument_tokens = self.kite_state.companyTokens
+        profitable_prices = self.kite_state.profitablePrice
         sell_dict = dict()
         profitable_dict = dict()
         
         # Building profitable dict
-        for token, profitable_price in zip(instrument_tokens, self.kite_state.profitablePrice):
+        for token, profitable_price in zip(instrument_tokens, profitable_prices):
             profitable_dict[token] = profitable_price
 
         # Defining the callbacks
         def on_ticks(tick, ticks_info):
             if len(ticks_info) == 0:
                 tick.close()
-            global end_time
-            global sell_dict
-            global profitable_dict
 
             now = datetime.now().astimezone(tzlocal())
             if now <= end_time:
@@ -126,7 +124,26 @@ class LiveSimulator:
         ticker.on_connect = on_connect
         ticker.on_close = on_close
 
-        ticker.connect()    
+        ticker.connect()
+
+        # Build final sell_dict
+
+        sell_list = list()
+        for index, (key, value) in enumerate(profitable_dict):
+            sell_list.append(sell_dict[key])
+
+        self.kite_state.sellPrice = sell_list
+        self.kite_state.save()
+
+    def calculate_and_store_pnl(self):
+        quantitiy = np.array(self.kite_state.buyQuantity)
+        buy = np.array(self.kite_state.buyPrice)
+        sell = np.array(self.kite_state.sellPrice)
+        pnl_per_company = np.multiply(sell - buy, quantitiy)
+        self.kite_state.pnl = np.sum(pnl_per_company)
+        self.kite_state.save()
+
+
 
     def get_request_token(self):
         selenium = SeleniumDispatcher(headless=True)
