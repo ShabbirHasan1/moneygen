@@ -124,6 +124,7 @@ class LiveSimulator:
 
         def on_connect(tick, response):
             tick.subscribe(instrument_tokens)
+            tick.set_mode(tick.MODE_LTP, instrument_tokens)
             Logger.info('Subscribed tokens: ' + str(instrument_tokens))
 
         def on_close(tick, code, reason):
