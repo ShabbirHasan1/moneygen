@@ -99,7 +99,7 @@ class LiveSimulator:
 
             now = datetime.now().astimezone(tzlocal())
             if now <= end_time:
-                Logger.info('Normal Time:->', now.strftime("%H:%M:%S"))
+                Logger.info('Normal Time:->' + now.strftime("%H:%M:%S"))
                 for tick_info in ticks_info:
                     if tick_info['last_price'] >= profitable_dict[tick_info['instrument_token']]:
                         # TODO : Check if the order is correct
@@ -109,7 +109,7 @@ class LiveSimulator:
                     else:
                         continue
             else:
-                Logger.info('Closing Time:->', now.strftime("%H:%M:%S"))
+                Logger.info('Closing Time:->' + now.strftime("%H:%M:%S"))
                 for tick_info in ticks_info:
                     sell_dict[tick_info['instrument_token']] = tick_info['last_price']
                 tick.close()
@@ -117,7 +117,7 @@ class LiveSimulator:
 
         def on_connect(tick, response):
             tick.subscribe(instrument_tokens)
-            Logger.info('Subscribed tokens: ', instrument_tokens)
+            Logger.info('Subscribed tokens: ' + str(instrument_tokens))
 
         def on_close(tick, code, reason):
             Logger.info('Ticker closed successfuly!')
@@ -152,6 +152,7 @@ class LiveSimulator:
 
 
     def get_request_token(self):
+        Logger.info('Starting to fetch request token for Kite API')
         selenium = SeleniumDispatcher(headless=True)
         driver = selenium.get_driver()
         driver.get(self.kite.login_url())
