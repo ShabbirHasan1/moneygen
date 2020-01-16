@@ -43,6 +43,7 @@ class KiteSimulatorStateModel(MongoModel):
     profitDifference = fields.ListField()
     sellPrice = fields.ListField()
     pnl = fields.ListField()
+    pnlPerCompany = fields.ListField()
     createdBy = fields.CharField()
     createdDate = fields.CharField()
 

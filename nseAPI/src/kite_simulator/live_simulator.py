@@ -1,4 +1,3 @@
-import logging
 from kiteconnect import KiteConnect
 from kiteconnect import KiteTicker
 from config import Config
@@ -12,6 +11,7 @@ from datetime import datetime
 from dateutil.tz import *
 import urllib.parse as urlparse
 from urllib.parse import parse_qs
+from util.log import Logger
 
 
 
@@ -99,37 +99,42 @@ class LiveSimulator:
 
             now = datetime.now().astimezone(tzlocal())
             if now <= end_time:
+                Logger.info('Normal Time:->', now.strftime("%H:%M:%S"))
                 for tick_info in ticks_info:
                     if tick_info['last_price'] >= profitable_dict[tick_info['instrument_token']]:
                         # TODO : Check if the order is correct
                         sell_dict[tick_info['instrument_token']] = tick_info['last_price']
                         tick.unsubscribe([tick_info['instrument_token']])
+                        Logger.info('Unsubscribed token: ', tick_info['instrument_token'])
                     else:
                         continue
             else:
+                Logger.info('Closing Time:->', now.strftime("%H:%M:%S"))
                 for tick_info in ticks_info:
                     sell_dict[tick_info['instrument_token']] = tick_info['last_price']
                 tick.close()
                 
 
         def on_connect(tick, response):
-            global instrument_tokens
             tick.subscribe(instrument_tokens)
+            Logger.info('Subscribed tokens: ', instrument_tokens)
 
         def on_close(tick, code, reason):
+            Logger.info('Ticker closed successfuly!')
             tick.stop()
 
         # Assign the callbacks.
         ticker.on_ticks = on_ticks
         ticker.on_connect = on_connect
         ticker.on_close = on_close
-
+        
+        # Connect to live ticker
         ticker.connect()
 
-        # Build final sell_dict
+        # Build final sell_dict in correct order
 
         sell_list = list()
-        for index, (key, value) in enumerate(profitable_dict):
+        for key in profitable_dict.keys():
             sell_list.append(sell_dict[key])
 
         self.kite_state.sellPrice = sell_list
@@ -140,6 +145,7 @@ class LiveSimulator:
         buy = np.array(self.kite_state.buyPrice)
         sell = np.array(self.kite_state.sellPrice)
         pnl_per_company = np.multiply(sell - buy, quantitiy)
+        self.kite_state.pnlPerCompany = pnl_per_company
         self.kite_state.pnl = np.sum(pnl_per_company)
         self.kite_state.save()
 
@@ -163,13 +169,10 @@ class LiveSimulator:
         url = driver.current_url
         parsed = urlparse.urlparse(url)
         token = parse_qs(parsed.query)['request_token'][0]
-        print(token)
+        Logger.info('Request token received!')
         selenium.destroy_driver()
         return token
 
-    def process_tick(self, tick, tick_info):
-        if len(tick_info) == 0:
-            return False
         
 
         
