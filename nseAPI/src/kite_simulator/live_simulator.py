@@ -22,6 +22,7 @@ class LiveSimulator:
         self.username = username
         self.password = password
         self.pin = pin
+        # TODO: Generate kite instance only when a function that requires it is called
         self.api_key = api_key
         self.kite = KiteConnect(api_key=api_key)
         req_token = self.get_request_token()
@@ -96,8 +97,6 @@ class LiveSimulator:
         def on_ticks(tick, ticks_info):
             num_ticks = len(ticks_info)
             Logger.info('Ticking, number: {}'.format(num_ticks))
-            if num_ticks == 0:
-                tick.close()
 
             now = datetime.now().astimezone(tzlocal())
             if now <= self.end_time:
@@ -109,7 +108,7 @@ class LiveSimulator:
                         sell_dict[current_instrument_token] = tick_info['last_price']
                         tick.unsubscribe([current_instrument_token])
                         instrument_tokens.remove(current_instrument_token)
-                        tick.resubscribe()
+                        # tick.resubscribe()
                         Logger.info('Unsubscribed token: ' + str(current_instrument_token))
                     else:
                         continue
@@ -117,7 +116,8 @@ class LiveSimulator:
                 Logger.info('Closing Time:->' + now.strftime("%H:%M:%S"))
                 for tick_info in ticks_info:
                     sell_dict[tick_info['instrument_token']] = tick_info['last_price']
-                tick.close()
+                    instrument_tokens.remove(tick_info['instrument_token'])
+                # tick.close()
             if len(instrument_tokens) == 0:
                 tick.close()
                 
@@ -149,12 +149,14 @@ class LiveSimulator:
         self.kite_state.save()
 
     def calculate_and_store_pnl(self):
-        quantitiy = np.array(self.kite_state.buyQuantity)
+        quantitiy = np.array(self.kite_state.numberOfStocksPerCompany)
+        # Subtracting 1 from all companies as a failsafe for fund exhaustion, in case the stocks goes really high
+        normalised_quantity = quantitiy - 1
         buy = np.array(self.kite_state.buyPrice)
         sell = np.array(self.kite_state.sellPrice)
-        pnl_per_company = np.multiply(sell - buy, quantitiy)
-        self.kite_state.pnlPerCompany = pnl_per_company
-        self.kite_state.pnl = np.sum(pnl_per_company)
+        pnl_per_company = np.multiply(sell - buy, normalised_quantity)
+        self.kite_state.pnlPerCompany = pnl_per_company.tolist()
+        self.kite_state.pnl = float(np.sum(pnl_per_company))
         self.kite_state.save()
 
 
@@ -170,11 +172,11 @@ class LiveSimulator:
         password_field = driver.find_element_by_xpath("//input[@type='password']")
         password_field.send_keys(self.password)
         password_field.send_keys(Keys.ENTER)
-        time.sleep(4)
+        time.sleep(2)
         pin_field = driver.find_element_by_xpath("//input[@type='password']")
         pin_field.send_keys(self.pin)
         pin_field.send_keys(Keys.ENTER)
-        time.sleep(4)
+        time.sleep(2)
         url = driver.current_url
         parsed = urlparse.urlparse(url)
         token = parse_qs(parsed.query)['request_token'][0]
