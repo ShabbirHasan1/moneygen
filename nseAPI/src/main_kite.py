@@ -17,7 +17,7 @@ market_preopen_close = market_open
 if now >= market_preopen_open and now <= market_open:
     from kite_simulator import SimulationSetup
     SimulationSetup()
-    Logger.info('Kite Job Simulation Setup completed at: ' + str(datetime.now()), push_to_slack=False)
+    Logger.info('Kite Job Simulation Setup completed at: ' + str(datetime.now()), push_to_slack=True)
 
 if now >= market_open and now <= market_close:
     # Running in different process, since Websocket reactor cannot be restarted in same process
@@ -38,7 +38,7 @@ if now >= market_open and now <= market_close:
     simulation_process = Process(target=simulate_market_process)
     simulation_process.start()
     simulation_process.join(timeout=None)
-    Logger.info('Kite Job Simulation and PNL calculation completed at: ' + str(datetime.now()), push_to_slack=False)
+    Logger.info('Kite Job Simulation and PNL calculation completed at: ' + str(datetime.now()), push_to_slack=True)
 
 Logger.info('Complete!')
 
