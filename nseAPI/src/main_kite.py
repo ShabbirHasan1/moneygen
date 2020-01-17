@@ -4,7 +4,8 @@ from kite_simulator import SimulationSetup, LiveSimulator
 from util.log import Logger
 from datetime import datetime
 from dateutil.tz import *
-
+import time
+from multiprocessing import Process
 
 
 Logger.info('=====================Kite Job Starting at: ' + str(datetime.now()))
@@ -17,11 +18,21 @@ market_preopen_close = market_open
 
 
 if now >= market_preopen_open and now <= market_open:
-    kite_sim_setup = SimulationSetup()
+    SimulationSetup()
+    Logger.info('Kite Job Simulation Setup completed at: ' + str(datetime.now()), push_to_slack=False)
 
 if now >= market_open and now <= market_close:
-    # Run the ticker simulation here
-    pass
+    # Running in different process, since Websocket reactor cannot be restarted in same process
+    simulator = LiveSimulator()
+    init_process = Process(target=simulator.sim_init)
+    init_process.start()
+    init_process.join(timeout=None)
+    simulation_process = Process(target=simulator.simulate_market)
+    simulation_process.start()
+    simulation_process.join(timeout=None)
+    simulator.calculate_and_store_pnl()
+    Logger.info('Kite Job Simulation and PNL calculation completed at: ' + str(datetime.now()), push_to_slack=False)
 
 Logger.info('Complete!')
-Logger.info('=====================Kite Job Completed at: ' + str(datetime.now()), push_to_slack=True)
+
+Logger.info('=====================Kite Job Ended at: ' + str(datetime.now()))

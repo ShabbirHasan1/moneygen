@@ -64,6 +64,7 @@ class LiveSimulator:
 
         def on_close(tick, code, reason):
             tick.stop()
+            Logger.info('Connection closed successfully!')
 
         # Assign the callbacks.
         ticker.on_ticks = on_ticks
@@ -137,6 +138,7 @@ class LiveSimulator:
         ticker.on_close = on_close
         
         # Connect to live ticker
+        # if not ticker.is_connected():
         ticker.connect()
 
         # Build final sell_dict in correct order
