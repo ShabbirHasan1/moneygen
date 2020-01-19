@@ -6,3 +6,4 @@ chromedriver/
 job.log
 geckodriver.log
 **/*.pyc
+sim_job.log
