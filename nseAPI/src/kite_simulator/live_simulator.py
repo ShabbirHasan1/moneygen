@@ -114,10 +114,12 @@ class LiveSimulator:
                     else:
                         continue
             else:
+                # TODO: Save state of instrument last traded price for closing trade
                 Logger.info('Closing Time:->' + now.strftime("%H:%M:%S"))
                 for tick_info in ticks_info:
                     sell_dict[tick_info['instrument_token']] = tick_info['last_price']
                     instrument_tokens.remove(tick_info['instrument_token'])
+                    tick.unsubscribe([tick_info['instrument_token']])
                 # tick.close()
             if len(instrument_tokens) == 0:
                 tick.close()
