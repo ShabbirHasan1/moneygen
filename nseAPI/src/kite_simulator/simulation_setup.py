@@ -33,7 +33,9 @@ class SimulationSetup:
         self.kite_state.save()
 
     def get_and_store_previous_close_price(self, previous_close_price):
-        self.kite_state.previousClosePrice = np.array(previous_close_price).astype(np.float).tolist()
+        # Removing commas from previous close price in string format
+        cleaned_previous_close_price = [''.join(item.split(',')) for item in previous_close_price]
+        self.kite_state.previousClosePrice = np.array(cleaned_previous_close_price).astype(np.float).tolist()
         self.kite_state.save()
 
     def calc_and_store_funds_per_company(self):
