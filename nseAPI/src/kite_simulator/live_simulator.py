@@ -110,7 +110,6 @@ class LiveSimulator:
                     current_instrument_price = tick_info['last_price']
                     price_state_dict[current_instrument_token] = current_instrument_price
                     if current_instrument_price >= profitable_dict[current_instrument_token]:
-                        # TODO : Check if the order is correct
                         sell_dict[current_instrument_token] = current_instrument_price
                         tick.unsubscribe([current_instrument_token])
                         instrument_tokens.remove(current_instrument_token)
@@ -119,7 +118,6 @@ class LiveSimulator:
                     else:
                         continue
             else:
-                # TODO: Save state of instrument last traded price for closing trade
                 Logger.info('Closing Time:->' + now.strftime("%H:%M:%S"))
                 unsold_instrument_tokens = list(set(price_state_dict.keys()) - set(sell_dict.keys()))
                 for instrument_token in unsold_instruments:
