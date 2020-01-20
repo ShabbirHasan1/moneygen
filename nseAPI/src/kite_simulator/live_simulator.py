@@ -88,7 +88,9 @@ class LiveSimulator:
         instrument_tokens = self.kite_state.companyTokens.copy()
         profitable_prices = self.kite_state.profitablePrice
         sell_dict = dict()
+        price_state_dict = dict()
         profitable_dict = dict()
+        first_tick = False
         
         # Building profitable dict
         for token, profitable_price in zip(instrument_tokens, profitable_prices):
@@ -96,17 +98,20 @@ class LiveSimulator:
 
         # Defining the callbacks
         def on_ticks(tick, ticks_info):
+
             num_ticks = len(ticks_info)
             Logger.info('Ticking, number: {}'.format(num_ticks))
-
             now = datetime.now().astimezone(tzlocal())
+
             if now <= self.end_time:
                 Logger.info('Normal Time:->' + now.strftime("%H:%M:%S"))
                 for tick_info in ticks_info:
                     current_instrument_token = tick_info['instrument_token']
-                    if tick_info['last_price'] >= profitable_dict[current_instrument_token]:
+                    current_instrument_price = tick_info['last_price']
+                    price_state_dict[current_instrument_token] = current_instrument_price
+                    if current_instrument_price >= profitable_dict[current_instrument_token]:
                         # TODO : Check if the order is correct
-                        sell_dict[current_instrument_token] = tick_info['last_price']
+                        sell_dict[current_instrument_token] = current_instrument_price
                         tick.unsubscribe([current_instrument_token])
                         instrument_tokens.remove(current_instrument_token)
                         # tick.resubscribe()
@@ -116,11 +121,11 @@ class LiveSimulator:
             else:
                 # TODO: Save state of instrument last traded price for closing trade
                 Logger.info('Closing Time:->' + now.strftime("%H:%M:%S"))
-                for tick_info in ticks_info:
-                    sell_dict[tick_info['instrument_token']] = tick_info['last_price']
-                    instrument_tokens.remove(tick_info['instrument_token'])
-                    tick.unsubscribe([tick_info['instrument_token']])
-                # tick.close()
+                unsold_instrument_tokens = list(set(price_state_dict.keys()) - set(sell_dict.keys()))
+                for instrument_token in unsold_instruments:
+                    sell_dict[instrument_token] = price_state_dict[instrument_token]
+                tick.close()
+
             if len(instrument_tokens) == 0:
                 tick.close()
                 
