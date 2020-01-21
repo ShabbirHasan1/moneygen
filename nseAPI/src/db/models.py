@@ -45,6 +45,7 @@ class KiteSimulatorStateModel(MongoModel):
     pnlPerCompany = fields.ListField()
     createdBy = fields.CharField()
     createdDate = fields.CharField()
+    simulationInitSuccessful = fields.BooleanField()
 
     class Meta:
         write_concern = WriteConcern(j=True)
