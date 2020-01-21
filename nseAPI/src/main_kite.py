@@ -13,7 +13,7 @@ market_close = now.replace(hour=15, minute=30)
 market_preopen_open = now.replace(hour=9, minute=0)
 market_preopen_close = market_open
     
-
+#TODO: Create tasks by inheriting multiprocessing module
 if now >= market_preopen_open and now <= market_open:
     from kite_simulator import SimulationSetup
     SimulationSetup()

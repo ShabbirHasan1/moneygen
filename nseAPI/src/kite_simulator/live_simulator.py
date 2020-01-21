@@ -45,42 +45,45 @@ class LiveSimulator:
 
     
     def sim_init(self):
-        # Initialise
-        ticker = KiteTicker(self.api_key, self.access_token)
-        instrument_tokens = self.kite_state.companyTokens.copy()
-        profit_slab = self.kite_state.profitSlab
-        buy_dict = dict()
-        # Defining the callbacks
-        def on_ticks(tick, ticks_info):
-            # global buy_dict
-            for tick_info in ticks_info:
-                # TODO : Check if the order is correct
-                buy_dict[tick_info['instrument_token']] = tick_info['last_price']
-            tick.close()
+        if not self.kite_state.simulationInitSuccessful:
+            # Initialise
+            ticker = KiteTicker(self.api_key, self.access_token)
+            instrument_tokens = self.kite_state.companyTokens.copy()
+            profit_slab = self.kite_state.profitSlab
+            buy_dict = dict()
+            # Defining the callbacks
+            def on_ticks(tick, ticks_info):
+                # global buy_dict
+                for tick_info in ticks_info:
+                    # TODO : Check if the order is correct
+                    buy_dict[tick_info['instrument_token']] = tick_info['last_price']
+                tick.close()
 
-        def on_connect(tick, response):
-            # global instrument_tokens
-            tick.subscribe(self.kite_state.companyTokens)
+            def on_connect(tick, response):
+                # global instrument_tokens
+                tick.subscribe(self.kite_state.companyTokens)
 
-        def on_close(tick, code, reason):
-            tick.stop()
-            Logger.info('Connection closed successfully!')
+            def on_close(tick, code, reason):
+                tick.stop()
+                Logger.info('Connection closed successfully!')
 
-        # Assign the callbacks.
-        ticker.on_ticks = on_ticks
-        ticker.on_connect = on_connect
-        ticker.on_close = on_close
+            # Assign the callbacks.
+            ticker.on_ticks = on_ticks
+            ticker.on_connect = on_connect
+            ticker.on_close = on_close
 
-        ticker.connect()
+            ticker.connect()
 
-        # Building buy list
-        buy_list = list()
-        for token in instrument_tokens:
-            buy_list.append(buy_dict[token])
-        self.kite_state.buyPrice = buy_list
-        self.kite_state.save()
-        self.kite_state.profitablePrice = (np.array(buy_list) + np.array(self.kite_state.profitSlab)).tolist()
-        self.kite_state.save()
+            # Building buy list
+            buy_list = list()
+            for token in instrument_tokens:
+                buy_list.append(buy_dict[token])
+            self.kite_state.buyPrice = buy_list
+            # TODO: Round off all calculations like this upto 2 decimal places, perfectly divisible by 0.05
+            self.kite_state.profitablePrice = (np.array(buy_list) + np.array(self.kite_state.profitSlab)).tolist()
+            self.kite_state.simulationInitSuccessful = True
+            self.kite_state.save()
+
 
     def simulate_market(self):
         # Initialise
