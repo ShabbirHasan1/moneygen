@@ -98,7 +98,6 @@ class LiveSimulator:
 
         # Defining the callbacks
         def on_ticks(tick, ticks_info):
-
             num_ticks = len(ticks_info)
             Logger.info('Ticking, number: {}'.format(num_ticks))
             now = datetime.now().astimezone(tzlocal())
@@ -119,6 +118,7 @@ class LiveSimulator:
                         continue
             else:
                 Logger.info('Closing Time:->' + now.strftime("%H:%M:%S"))
+                Logger.info('Price State dict: ', price_state_dict)
                 unsold_instrument_tokens = list(set(price_state_dict.keys()) - set(sell_dict.keys()))
                 for instrument_token in unsold_instruments:
                     sell_dict[instrument_token] = price_state_dict[instrument_token]
@@ -145,6 +145,7 @@ class LiveSimulator:
         # Connect to live ticker
         # if not ticker.is_connected():
         ticker.connect()
+        Logger.info('Building final dict', sell_dict)
 
         # Build final sell_dict in correct order
 
