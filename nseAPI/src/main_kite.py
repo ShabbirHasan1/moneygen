@@ -22,6 +22,7 @@ if now >= market_preopen_open and now <= market_open:
 if now >= market_open and now <= market_close:
     # Running in different process, since Websocket reactor cannot be restarted in same process
     # Mongo CLient should not be created before forking (creating a child process), therefore creating mini functions
+    #TODO: Add a check if SimulationInit was successful or not if it was successfull, skip it.
     def simulation_init_process():
         Logger.info('Running Simulation init process')
         from kite_simulator import LiveSimulator
