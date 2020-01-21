@@ -124,7 +124,7 @@ class LiveSimulator:
                 Logger.info('Price State dict: ' +  str(price_state_dict))
                 Logger.info('Sell dict: ' + str(sell_dict))
                 unsold_instrument_tokens = list(set(price_state_dict.keys()) - set(sell_dict.keys()))
-                Logger.info('Unsold instruments: ' + unsold_instrument_tokens)
+                Logger.info('Unsold instruments: ' + str(unsold_instrument_tokens))
                 for instrument_token in unsold_instruments:
                     sell_dict[instrument_token] = price_state_dict[instrument_token]
                 tick.close()
