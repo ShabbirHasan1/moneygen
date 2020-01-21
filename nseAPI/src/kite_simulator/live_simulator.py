@@ -121,8 +121,10 @@ class LiveSimulator:
                         continue
             else:
                 Logger.info('Closing Time:->' + now.strftime("%H:%M:%S"))
-                Logger.info('Price State dict: ', price_state_dict)
+                Logger.info('Price State dict: ' +  str(price_state_dict))
+                Logger.info('Sell dict: ' + str(sell_dict))
                 unsold_instrument_tokens = list(set(price_state_dict.keys()) - set(sell_dict.keys()))
+                Logger.info('Unsold instruments: ' + unsold_instrument_tokens)
                 for instrument_token in unsold_instruments:
                     sell_dict[instrument_token] = price_state_dict[instrument_token]
                 tick.close()
@@ -148,7 +150,7 @@ class LiveSimulator:
         # Connect to live ticker
         # if not ticker.is_connected():
         ticker.connect()
-        Logger.info('Building final dict', sell_dict)
+        Logger.info('Building final dict' + str(sell_dict))
 
         # Build final sell_dict in correct order
 
