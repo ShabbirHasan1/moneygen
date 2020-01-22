@@ -117,8 +117,6 @@ class LiveSimulator:
                         instrument_tokens.remove(current_instrument_token)
                         # tick.resubscribe()
                         Logger.info('Unsubscribed token: ' + str(current_instrument_token))
-                    else:
-                        continue
             else:
                 Logger.info('Closing Time:->' + now.strftime("%H:%M:%S"))
                 Logger.info('Price State dict: ' +  str(price_state_dict))
