@@ -19,7 +19,7 @@ if now >= market_preopen_open and now <= market_open:
     SimulationSetup()
     Logger.info('Kite Job Simulation Setup completed at: ' + str(datetime.now()), push_to_slack=True)
 
-if now >= market_open and now <= market_close:
+if now > market_open and now < market_close:
     # Running in different process, since Websocket reactor cannot be restarted in same process
     # Mongo CLient should not be created before forking (creating a child process), therefore creating mini functions
     def simulation_init_process():
