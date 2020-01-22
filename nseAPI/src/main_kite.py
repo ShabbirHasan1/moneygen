@@ -14,12 +14,12 @@ market_preopen_open = now.replace(hour=9, minute=0)
 market_preopen_close = market_open
     
 #TODO: Create tasks by inheriting multiprocessing module
-if now >= market_preopen_open and now <= market_open:
+if now > market_preopen_open and now < market_open:
     from kite_simulator import SimulationSetup
     SimulationSetup()
     Logger.info('Kite Job Simulation Setup completed at: ' + str(datetime.now()), push_to_slack=True)
 
-if now > market_open and now < market_close:
+if now >= market_open and now <= market_close:
     # Running in different process, since Websocket reactor cannot be restarted in same process
     # Mongo CLient should not be created before forking (creating a child process), therefore creating mini functions
     def simulation_init_process():
