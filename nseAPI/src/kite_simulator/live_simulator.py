@@ -105,27 +105,28 @@ class LiveSimulator:
             Logger.info('Ticking, number: {}'.format(num_ticks))
             now = datetime.now().astimezone(tzlocal())
 
-            if now <= self.end_time:
-                Logger.info('Normal Time:->' + now.strftime("%H:%M:%S"))
-                for tick_info in ticks_info:
-                    current_instrument_token = tick_info['instrument_token']
-                    current_instrument_price = tick_info['last_price']
-                    price_state_dict[current_instrument_token] = current_instrument_price
-                    if current_instrument_price >= profitable_dict[current_instrument_token]:
-                        sell_dict[current_instrument_token] = current_instrument_price
-                        tick.unsubscribe([current_instrument_token])
-                        instrument_tokens.remove(current_instrument_token)
-                        # tick.resubscribe()
-                        Logger.info('Unsubscribed token: ' + str(current_instrument_token))
-            else:
-                Logger.info('Closing Time:->' + now.strftime("%H:%M:%S"))
-                Logger.info('Price State dict: ' +  str(price_state_dict))
-                Logger.info('Sell dict: ' + str(sell_dict))
-                unsold_instrument_tokens = list(set(price_state_dict.keys()) - set(sell_dict.keys()))
-                Logger.info('Unsold instruments: ' + str(unsold_instrument_tokens))
-                for instrument_token in unsold_instruments:
-                    sell_dict[instrument_token] = price_state_dict[instrument_token]
-                tick.close()
+            if num_ticks > 0:
+                if now <= self.end_time:
+                    Logger.info('Normal Time:->' + now.strftime("%H:%M:%S"))
+                    for tick_info in ticks_info:
+                        current_instrument_token = tick_info['instrument_token']
+                        current_instrument_price = tick_info['last_price']
+                        price_state_dict[current_instrument_token] = current_instrument_price
+                        if current_instrument_price >= profitable_dict[current_instrument_token]:
+                            sell_dict[current_instrument_token] = current_instrument_price
+                            tick.unsubscribe([current_instrument_token])
+                            instrument_tokens.remove(current_instrument_token)
+                            # tick.resubscribe()
+                            Logger.info('Unsubscribed token: ' + str(current_instrument_token))
+                else:
+                    Logger.info('Closing Time:->' + now.strftime("%H:%M:%S"))
+                    Logger.info('Price State dict: ' +  str(price_state_dict))
+                    Logger.info('Sell dict: ' + str(sell_dict))
+                    unsold_instrument_tokens = list(set(price_state_dict.keys()) - set(sell_dict.keys()))
+                    Logger.info('Unsold instruments: ' + str(unsold_instrument_tokens))
+                    for instrument_token in unsold_instruments:
+                        sell_dict[instrument_token] = price_state_dict[instrument_token]
+                    tick.close()
 
             if len(instrument_tokens) == 0:
                 tick.close()
