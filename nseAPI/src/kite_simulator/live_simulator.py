@@ -106,7 +106,7 @@ class LiveSimulator:
             now = datetime.now().astimezone(tzlocal())
 
             if num_ticks > 0:
-                if now <= self.end_time:
+                if now < self.end_time:
                     Logger.info('Normal Time:->' + now.strftime("%H:%M:%S"))
                     for tick_info in ticks_info:
                         current_instrument_token = tick_info['instrument_token']
@@ -115,7 +115,6 @@ class LiveSimulator:
                         if current_instrument_price >= profitable_dict[current_instrument_token]:
                             sell_dict[current_instrument_token] = current_instrument_price
                             tick.unsubscribe([current_instrument_token])
-                            instrument_tokens.remove(current_instrument_token)
                             # tick.resubscribe()
                             Logger.info('Unsubscribed token: ' + str(current_instrument_token))
                 else:
