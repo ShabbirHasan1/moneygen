@@ -89,7 +89,7 @@ class LiveSimulator:
         # Initialise
         ticker = KiteTicker(self.api_key, self.access_token)
         instrument_tokens = self.kite_state.companyTokens.copy()
-        profitable_prices = self.kite_state.profitablePrice
+        profitable_prices = self.kite_state.profitablePrice.copy()
         sell_dict = dict()
         price_state_dict = dict()
         profitable_dict = dict()
@@ -115,6 +115,7 @@ class LiveSimulator:
                         if current_instrument_price >= profitable_dict[current_instrument_token]:
                             sell_dict[current_instrument_token] = current_instrument_price
                             tick.unsubscribe([current_instrument_token])
+                            instrument_tokens.remove(current_instrument_token)
                             # tick.resubscribe()
                             Logger.info('Unsubscribed token: ' + str(current_instrument_token))
                 else:
@@ -125,7 +126,8 @@ class LiveSimulator:
                     Logger.info('Unsold instruments: ' + str(unsold_instrument_tokens))
                     for instrument_token in unsold_instruments:
                         sell_dict[instrument_token] = price_state_dict[instrument_token]
-                    tick.close()
+                        instrument_tokens.remove(instrument_token)
+                    Logger.info('Sell dict after close: ' + str(sell_dict))
 
             if len(instrument_tokens) == 0:
                 tick.close()
