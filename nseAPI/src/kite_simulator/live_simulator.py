@@ -101,6 +101,10 @@ class LiveSimulator:
 
         # Defining the callbacks
         def on_ticks(tick, ticks_info):
+            if len(instrument_tokens) == 0:
+                tick.close()
+
+
             num_ticks = len(ticks_info)
             Logger.info('Ticking, number: {}'.format(num_ticks))
             now = datetime.now().astimezone(tzlocal())
@@ -129,8 +133,7 @@ class LiveSimulator:
                         instrument_tokens.remove(instrument_token)
                     Logger.info('Sell dict after close: ' + str(sell_dict))
 
-            if len(instrument_tokens) == 0:
-                tick.close()
+            
                 
 
         def on_connect(tick, response):
