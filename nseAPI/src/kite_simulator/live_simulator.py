@@ -167,8 +167,10 @@ class LiveSimulator:
     def calculate_and_store_pnl(self):
         quantitiy = np.array(self.kite_state.numberOfStocksPerCompany)
         # Subtracting 1 from all companies as a failsafe for fund exhaustion, in case the stocks goes really high
-        # TODO: Handle negative quantity
         normalised_quantity = quantitiy - 1
+
+        # Rounding negative values to 0
+        normalised_quantity = normalised_quantity.clip(min=0)
         buy = np.array(self.kite_state.buyPrice)
         sell = np.array(self.kite_state.sellPrice)
         pnl_per_company = np.multiply(sell - buy, normalised_quantity)
