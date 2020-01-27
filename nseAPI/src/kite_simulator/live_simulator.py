@@ -128,7 +128,7 @@ class LiveSimulator:
                     Logger.info('Sell dict: ' + str(sell_dict))
                     unsold_instrument_tokens = list(set(price_state_dict.keys()) - set(sell_dict.keys()))
                     Logger.info('Unsold instruments: ' + str(unsold_instrument_tokens))
-                    for instrument_token in unsold_instruments:
+                    for instrument_token in unsold_instrument_tokens:
                         sell_dict[instrument_token] = price_state_dict[instrument_token]
                         instrument_tokens.remove(instrument_token)
                     Logger.info('Sell dict after close: ' + str(sell_dict))
