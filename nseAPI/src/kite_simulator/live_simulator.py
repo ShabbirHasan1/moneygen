@@ -55,7 +55,6 @@ class LiveSimulator:
             def on_ticks(tick, ticks_info):
                 # global buy_dict
                 for tick_info in ticks_info:
-                    # TODO : Check if the order is correct
                     buy_dict[tick_info['instrument_token']] = tick_info['last_price']
                 tick.close()
 
@@ -79,8 +78,7 @@ class LiveSimulator:
             for token in instrument_tokens:
                 buy_list.append(buy_dict[token])
             self.kite_state.buyPrice = buy_list
-            # TODO: Round off all calculations like this upto 2 decimal places, perfectly divisible by 0.05
-            self.kite_state.profitablePrice = (np.array(buy_list) + np.array(self.kite_state.profitSlab)).tolist()
+            self.kite_state.profitablePrice = np.around((np.array(buy_list) + np.array(self.kite_state.profitSlab)), decimals=2).tolist()
             self.kite_state.simulationInitSuccessful = True
             self.kite_state.save()
 

@@ -37,9 +37,10 @@ if now >= market_open and now <= market_close:
     init_process = Process(target=simulation_init_process)
     init_process.start()
     init_process.join(timeout=None)
-    simulation_process = Process(target=simulate_market_process)
-    simulation_process.start()
-    simulation_process.join(timeout=None)
+    # simulation_process = Process(target=simulate_market_process)
+    # simulation_process.start()
+    # simulation_process.join(timeout=None)
+    simulate_market_process()
     Logger.info('Kite Job Simulation and PNL calculation completed at: ' + str(datetime.now()), push_to_slack=True)
 # TODO: Make PNL report like in google sheets
 # @body: https://docs.google.com/spreadsheets/d/10hrU7-Mw5vXII2IZxS5tO-tYRgoMn0ujONJUH_4FN2o/edit#gid=0
