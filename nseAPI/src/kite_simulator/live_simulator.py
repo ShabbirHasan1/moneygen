@@ -78,9 +78,17 @@ class LiveSimulator:
             buy_list = list()
             for token in instrument_tokens:
                 buy_list.append(buy_dict[token])
-            self.kite_state.buyPrice = buy_list
+
+            final_buy_list = list()
+            for buy, low in zip(buy_list, self.kite_state.lowPrice):
+                if buy < 1:
+                    final_buy_list.append(low)
+                else:
+                    final_buy_list.append(buy)
+
+            self.kite_state.buyPrice = final_buy_list
             # TODO: Round off all calculations like this upto 2 decimal places, perfectly divisible by 0.05
-            self.kite_state.profitablePrice = (np.array(buy_list) + np.array(self.kite_state.profitSlab)).tolist()
+            self.kite_state.profitablePrice = (np.array(final_buy_list) + np.array(self.kite_state.profitSlab)).tolist()
             self.kite_state.simulationInitSuccessful = True
             self.kite_state.save()
 
