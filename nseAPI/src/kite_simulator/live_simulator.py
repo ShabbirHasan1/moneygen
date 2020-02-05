@@ -175,6 +175,7 @@ class LiveSimulator:
         self.kite_state.pnlPerCompany = pnl_per_company.tolist()
         self.kite_state.pnl = float(np.sum(pnl_per_company))
         self.kite_state.save()
+        Logger.info("Today's PNL: {}".format(self.kite_state.pnl), push_to_slack=True)
 
 
 
