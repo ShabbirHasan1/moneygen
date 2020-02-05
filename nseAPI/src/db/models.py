@@ -34,6 +34,7 @@ class KiteSimulatorStateModel(MongoModel):
     companies = fields.ListField()
     companyTokens = fields.ListField()
     previousClosePrice = fields.ListField()
+    lowPrice = fields.ListField()
     fundsPerCompany = fields.IntegerField()
     numberOfStocksPerCompany = fields.ListField()
     buyPrice = fields.ListField()

@@ -16,6 +16,7 @@ class SimulationSetup:
         self.get_and_store_company_tokens(gl_object.listOfCompanies)
         self.get_and_store_funds()
         self.get_and_store_previous_close_price(gl_object.previousClosePrice)
+        self.get_and_store_low_price(gl_object.lowPrice)
         self.calc_and_store_funds_per_company()
         self.calc_and_store_number_of_stocks_per_company()
         self.calc_and_store_profit_slab_for_stocks()
@@ -37,6 +38,12 @@ class SimulationSetup:
         # Removing commas from previous close price in string format
         cleaned_previous_close_price = [''.join(item.split(',')) for item in previous_close_price]
         self.kite_state.previousClosePrice = np.array(cleaned_previous_close_price).astype(np.float).tolist()
+        self.kite_state.save()
+
+    def get_and_store_low_price(self, low_price):
+        # Removing commas from previous close price in string format
+        cleaned_low_price = [''.join(item.split(',')) for item in low_price]
+        self.kite_state.lowPrice = np.array(cleaned_low_price).astype(np.float).tolist()
         self.kite_state.save()
 
     def calc_and_store_funds_per_company(self):
