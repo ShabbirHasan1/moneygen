@@ -35,14 +35,16 @@ class TradedToPercentDelivered(threading.Thread):
             percent_delivered_dict = self.equity_scraper.get_info_all(gainers_list, specific_info_key='deliveryToTradedQuantity')
             percent_delivered = list(percent_delivered_dict.values())
             previous_close_prices = list(self.equity_scraper.get_info_all(gainers_list, specific_info_key='previousClose').values())
+            low_prices = list(self.equity_scraper.get_info_all(gainers_list, specific_info_key='dayLow').values())
             # Storing the list for future use
             self.store_securities_in_db(gainers_list)
             self.store_percent_delivered_in_db(percent_delivered)
             self.store_previous_close_price_in_db(previous_close_prices)
+            self.store_low_price_in_db(low_prices)
         else:
             # Getting only the first object
-            percent_delivered = gl_objects_list[0].percentDelivered
-            gainers_list = gl_objects_list[0].listOfCompanies
+            percent_delivered = gl_objects_list[-1].percentDelivered
+            gainers_list = gl_objects_list[-1].listOfCompanies
 
         last_price = self.equity_scraper.get_info_all(gainers_list, specific_info_key='lastPrice')
         self.store_last_price_in_db(list(last_price.values()))
@@ -92,5 +94,10 @@ class TradedToPercentDelivered(threading.Thread):
     def store_previous_close_price_in_db(self, previous_close_prices: list):
         gl_object = list(self.get_stored_securities_from_db())[0]
         gl_object.previousClosePrice = previous_close_prices
+        gl_object.save()
+
+    def store_low_price_in_db(self, low_prices: list):
+        gl_object = list(self.get_stored_securities_from_db())[0]
+        gl_object.lowPrice = low_prices
         gl_object.save()
 

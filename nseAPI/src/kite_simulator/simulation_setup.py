@@ -11,7 +11,7 @@ class SimulationSetup:
         self.kite_state = KiteSimulatorStateModel(createdDate=str(date.today()), createdBy=self.class_name)
         self.kite_state.simulationInitSuccessful = False
         self.funds = int(funds)
-        gl_object = self.get_stored_gainer_loser_info_from_db()[0]
+        gl_object = list(self.get_stored_gainer_loser_info_from_db())[-1]
         self.get_and_store_company_list(gl_object.listOfCompanies)
         self.get_and_store_company_tokens(gl_object.listOfCompanies)
         self.get_and_store_funds()
