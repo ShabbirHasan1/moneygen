@@ -82,22 +82,22 @@ class TradedToPercentDelivered(threading.Thread):
             ).save()
 
     def store_percent_delivered_in_db(self, percent_delivered: list):
-        gl_object = list(self.get_stored_securities_from_db())[0]
+        gl_object = list(self.get_stored_securities_from_db())[-1]
         gl_object.percentDelivered = percent_delivered
         gl_object.save()
 
     def store_last_price_in_db(self, last_price: list):
-        gl_object = list(self.get_stored_securities_from_db())[0]
+        gl_object = list(self.get_stored_securities_from_db())[-1]
         gl_object.lastPrice[self.local_time] = last_price
         gl_object.save()
 
     def store_previous_close_price_in_db(self, previous_close_prices: list):
-        gl_object = list(self.get_stored_securities_from_db())[0]
+        gl_object = list(self.get_stored_securities_from_db())[-1]
         gl_object.previousClosePrice = previous_close_prices
         gl_object.save()
 
     def store_low_price_in_db(self, low_prices: list):
-        gl_object = list(self.get_stored_securities_from_db())[0]
+        gl_object = list(self.get_stored_securities_from_db())[-1]
         gl_object.lowPrice = low_prices
         gl_object.save()
 
