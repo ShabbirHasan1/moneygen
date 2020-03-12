@@ -167,7 +167,12 @@ class LiveSimulator:
 
         sell_list = list()
         for key in profitable_dict.keys():
-            sell_list.append(sell_dict[key])
+            try:
+                sell_list.append(sell_dict[key])
+            except KeyError as ex:
+                Logger.err('Key error' + str(ex))
+                # TODO: Make this failsafe more robust
+                sell_list.append(0)
 
         self.kite_state.sellPrice = sell_list
         self.kite_state.save()
