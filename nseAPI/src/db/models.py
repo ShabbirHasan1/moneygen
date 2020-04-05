@@ -51,3 +51,11 @@ class KiteSimulatorStateModel(MongoModel):
     class Meta:
         write_concern = WriteConcern(j=True)
         connection_alias = Config.CONNECTION_ALIAS
+
+
+class OrderModel(MongoModel):
+    # TODO: Add fields for OrderModel
+
+    class Meta:
+        write_concern = WriteConcern(j=True)
+        connection_alias = Config.CONNECTION_ALIAS
