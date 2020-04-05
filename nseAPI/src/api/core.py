@@ -34,8 +34,14 @@ order_manager = OrderManager()
 @app.route('/webhook', methods=['POST'])
 def webhook():
     if request.method == 'POST':
+        # TODO: Check checksum from Kite Connect
+        checksum = ''
         update = request.json()
-        status = order_manager.update_order(updated_order=update, order_id=update['order_id'])
+        if checksum == update['checksum']:
+            status = order_manager.update_order(updated_order=update, order_id=update['order_id'], webhook=True)
+        else:
+            # TODO: Block the requester
+            pass
         # Cannot return anything, it's webhook
     else:
         return jsonify({'msg': 'Bad Request'}), 401
@@ -63,7 +69,7 @@ def get_or_modify_specific_order(order_id: int):
         result = order_manager.get_order(order_id=order_id)
         return jsonify({'data': result}), 200
     elif request.method == 'PUT' or request.method == 'PATCH':
-        result = order_manager.update_order(updated_order=request.json(), order_id=order_id)
+        result = order_manager.update_order(updated_order=request.json(), order_id=order_id, patch=True)
         return jsonify({'data': result}), 200
     elif request.method == 'DELETE':
         result = order_manager.delete_order(order_id=order_id)

@@ -7,7 +7,7 @@ class OrderManager:
     def create_order(self, order_spec: dict):
         pass
 
-    def update_order(self, updated_order: dict, order_id=None):
+    def update_order(self, updated_order: dict, order_id=None, patch=False, webhook=False):
         pass
 
     def get_order(self, order_id=None):
