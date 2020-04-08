@@ -55,6 +55,28 @@ class KiteSimulatorStateModel(MongoModel):
 
 class OrderModel(MongoModel):
     # TODO: Add fields for OrderModel
+    orderId = fields.CharField()
+    exchangeOrderId = fields.CharField()
+    placedBy = fields.CharField()
+    statuses = fields.ListField()
+    statusMessages = fields.ListField()
+    tradingSymbol = fields.ListField()
+    symbolExchangeToken = fields.IntegerField()
+    exchange = fields.CharField()
+    orderType = fields.CharField()
+    transactionType = fields.CharField()
+    validity = fields.CharField()
+    product = fields.CharField()
+    averagePrice = fields.FloatField()
+    price = fields.FloatField()
+    quantity = fields.IntegerField()
+    filledQuantity = fields.IntegerField()
+    unfilledQuantity = fields.IntegerField()
+    triggerPrice = fields.FloatField()
+    userId = fields.CharField()
+    orderTimestamp = fields.DateTimeField()
+    exchangeTimestamp = fields.DateTimeField()
+    lastChecksum = fields.CharField()
 
     class Meta:
         write_concern = WriteConcern(j=True)
