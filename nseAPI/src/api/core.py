@@ -69,7 +69,7 @@ def get_or_modify_specific_order(order_id: int):
         result = order_manager.get_order(order_id=order_id)
         return jsonify({'data': result}), 200
     elif request.method == 'PUT' or request.method == 'PATCH':
-        result = order_manager.update_order(updated_order=request.json(), order_id=order_id, patch=True)
+        result = order_manager.update_order(updated_order=request.json(), order_id=order_id, patch=True if request.method == 'PATCH' else False)
         return jsonify({'data': result}), 200
     elif request.method == 'DELETE':
         result = order_manager.delete_order(order_id=order_id)
