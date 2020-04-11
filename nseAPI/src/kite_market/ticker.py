@@ -15,7 +15,7 @@ from util.log import Logger
 
 
 
-class TickerBackend:
+class Ticker:
     def __init__(self, api_key=Config.KITE_API_KEY, api_secret=Config.KITE_API_SECRET, username = Config.KITE_USER_ID,
         password=Config.KITE_PASSWORD, pin=Config.KITE_PIN,
         end_hour=Config.KITE_SIMULATION_END_HOUR, end_minute=Config.KITE_SIMULATION_END_MINUTE):
