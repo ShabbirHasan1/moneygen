@@ -8,7 +8,7 @@ class QuoteManager:
         self.exchange = exchange
         self.kite_app = kite_app
 
-    def ltp(self, instruments: list) -> list:
+    def get_ltp(self, instruments: list) -> list:
         """Gets LTP quotes (no market depth, only stock quote and volumne)
         
         Arguments:
@@ -22,7 +22,7 @@ class QuoteManager:
         
             
 
-    def ohlc(self, instruments: list) -> list:
+    def get_ohlc(self, instruments: list) -> list:
         """Get OHLC quote for instruments with market depth upto 5 levels
         
         Arguments:
@@ -34,7 +34,7 @@ class QuoteManager:
         instruments = [f'{self.exchange}:{x}' for x in instruments]
         return self.kite_app.quote(instruments) # quote method here is called correctly
 
-    def full(self, instruments: list) -> list:
+    def get_full(self, instruments: list) -> list:
         """Gets OHLC quote for instruments without market depth
         
         Arguments:
