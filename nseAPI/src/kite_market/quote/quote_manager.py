@@ -23,7 +23,7 @@ class QuoteManager:
             
 
     def get_ohlc(self, instruments: list) -> list:
-        """Get OHLC quote for instruments with market depth upto 5 levels
+        """Get OHLC quote for instruments without market depth
         
         Arguments:
             instruments {list} -- List of instruments as exchange symbols (like INFY for NSE:INFY)
@@ -35,7 +35,7 @@ class QuoteManager:
         return self.kite_app.quote(instruments) # quote method here is called correctly
 
     def get_full(self, instruments: list) -> list:
-        """Gets OHLC quote for instruments without market depth
+        """Gets OHLC quote for instruments with market depth upto 5 levels
         
         Arguments:
             instruments {list} -- List of instruments as exchange symbols (like INFY for NSE:INFY)
