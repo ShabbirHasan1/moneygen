@@ -106,6 +106,3 @@ class MarketDepthAnalyser:
             bool -- Liquidity status
         """        
         return volume >= Config.LIQUID_VOLUME_THRESHOLD
-
-
-Mark
