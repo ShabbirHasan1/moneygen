@@ -29,7 +29,7 @@ class LiveSimulator:
         data = self.kite.generate_session(req_token, api_secret=api_secret)
         self.access_token = data["access_token"]
         self.kite.set_access_token(self.access_token)
-        self.kite_state = KiteSimulatorStateModel.objects.raw({'createdDate': str(date.today())})[0]
+        self.kite_state = list(KiteSimulatorStateModel.objects.raw({'createdDate': str(date.today())}))[-1]
         self.end_time = datetime.now().astimezone(tzlocal()).replace(hour=end_hour, minute=end_minute)
 
 
@@ -62,6 +62,7 @@ class LiveSimulator:
             def on_connect(tick, response):
                 # global instrument_tokens
                 tick.subscribe(self.kite_state.companyTokens)
+                tick.set_mode(tick.MODE_FULL, self.kite_state.companyTokens)
 
             def on_close(tick, code, reason):
                 tick.stop()
