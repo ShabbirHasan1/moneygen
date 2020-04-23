@@ -56,7 +56,7 @@ class LiveSimulator:
                 # global buy_dict
                 for tick_info in ticks_info:
                     # TODO : Check if the order is correct
-                    buy_dict[tick_info['instrument_token']] = tick_info['depth']['buy'][0]['price']
+                    buy_dict[tick_info['instrument_token']] = tick_info['depth']['sell'][0]['price']
                 tick.close()
 
             def on_connect(tick, response):
@@ -123,7 +123,7 @@ class LiveSimulator:
                     Logger.info('Normal Time:->' + now.strftime("%H:%M:%S"))
                     for tick_info in ticks_info:
                         current_instrument_token = tick_info['instrument_token']
-                        current_instrument_price = tick_info['depth']['sell'][0]['price']
+                        current_instrument_price = tick_info['depth']['buy'][0]['price']
                         price_state_dict[current_instrument_token] = current_instrument_price
                         if current_instrument_price >= profitable_dict[current_instrument_token]:
                             sell_dict[current_instrument_token] = current_instrument_price
