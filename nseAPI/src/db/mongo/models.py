@@ -1,7 +1,7 @@
 from pymodm import MongoModel, fields
 from pymongo.write_concern import WriteConcern
 from config import Config
-from db import MongoAdapter
+from db.mongo import MongoAdapter
 from pymodm.connection import connect
 
 
