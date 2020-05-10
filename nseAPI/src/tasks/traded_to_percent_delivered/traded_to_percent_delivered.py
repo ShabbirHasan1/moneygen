@@ -2,7 +2,7 @@ import threading
 from util.log import Logger
 from webscraper.gainer_loser_info import NSEIndiaGLScraper, RediffMoneyGLScraper
 from webscraper.equity import EquityScraper
-from db.models import GainerLoserInfoModel
+from db.mongo.models import GainerLoserInfoModel
 from datetime import datetime, date
 from config import Config
 from prettytable import PrettyTable

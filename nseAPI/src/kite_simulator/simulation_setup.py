@@ -1,4 +1,4 @@
-from db.models import KiteSimulatorStateModel, GainerLoserInfoModel
+from db.mongo.models import KiteSimulatorStateModel, GainerLoserInfoModel
 from datetime import datetime, date
 from config import Config
 import numpy as np

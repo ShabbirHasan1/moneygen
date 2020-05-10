@@ -4,7 +4,7 @@ from config import Config
 from util import SeleniumDispatcher
 from selenium.webdriver.common.keys import Keys
 import time
-from db.models import KiteSimulatorStateModel
+from db.mongo.models import KiteSimulatorStateModel
 from datetime import datetime, date
 import numpy as np
 from datetime import datetime
