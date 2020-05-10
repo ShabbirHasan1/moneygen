@@ -13,46 +13,84 @@ from util.log import Logger
 class HistoricalData:
     def __init__(self):
         # TODO: Make date range configurable
-        self.date_range = '24months' # Value in dropdown in target URL
+        self.date_range = '24month' # Value in dropdown in target URL
         # TODO: Make series configurable
-        self.series = 'All'
+        self.series = 'ALL' # Value in dropdown on target URL
+        self.engine = create_engine(Config.POSTGRES_CONNECTION_STRING)
+        Session = sessionmaker(bind=self.engine)
+        self.session = Session()
 
     def get_data_for_security(self, security_symbol: str) -> pd.DataFrame:
-        url = f"https://www1.nseindia.com/products/dynaContent/common/productsSymbolMapping.jsp?symbol={security_symbol}&segmentLink=3&symbolCount=2&series={self.series}&dateRange={self.data_range}&fromDate=&toDate=&dataType=PRICEVOLUMEDELIVERABLE"
+        url = f"https://www1.nseindia.com/products/dynaContent/common/productsSymbolMapping.jsp?symbol={security_symbol}&segmentLink=3&symbolCount=2&series={self.series}&dateRange={self.date_range}&fromDate=&toDate=&dataType=PRICEVOLUMEDELIVERABLE"
         res = requests.get(url, headers=Config.NSE_HEADERS)
         soup = BeautifulSoup(res.content, 'html.parser')
         data_stream = StringIO(soup.find(id='csvContentDiv').get_text())
         df = pd.read_csv(data_stream, lineterminator=':')
         return df
 
-    # TODO: Make it add only the new data when run on daily basis
-    def create_table(self, symbols: list):
-        engine = create_engine(Config.POSTGRES_CONNECTION_STRING)
-        meta = MetaData()
+    
+    def create_table_for_securities(self, symbols: list):
+        
         for symbol in symbols:
             try:
+                meta = MetaData()
                 table = Table(
                     symbol, meta, 
                     Column('id', Integer, primary_key = True), 
                     Column('Symbol', String), 
                     Column('Series', String), 
                     Column('Date', String), 
-                    Column('Prev Close', Float), 
-                    Column('Open Price', Float), 
-                    Column('High Price', Float), 
-                    Column('Low Price', Float),
-                    Column('Last Price', Float),
-                    Column('Close Price', Float),
-                    Column('Average Price', Float),
-                    Column('Total Traded Quantity', Float),
-                    Column('Turnover', Float),
-                    Column('No. of Trades', Float),
-                    Column('Deliverable Qty', Float),
-                    Column('% Dly Qt to Traded Qty', Float),
+                    Column('Prev Close', String), 
+                    Column('Open Price', String), 
+                    Column('High Price', String), 
+                    Column('Low Price', String),
+                    Column('Last Price', String),
+                    Column('Close Price', String),
+                    Column('Average Price', String),
+                    Column('Total Traded Quantity', String),
+                    Column('Turnover', String),
+                    Column('No. of Trades', String),
+                    Column('Deliverable Qty', String),
+                    # using 'Pct' instead of '%' since Postgres doesn't allow that
+                    Column('Pct Dly Qt to Traded Qty', String)
                 )
+                meta.create_all(self.engine)
             except IntegrityError:
                 Logger.err('Table exists: ', symbol)
             
-        meta.create_all(engine)
+    # TODO: Make it add only the new data when run on daily basis
+    def upsert_data(self, data: pd.DataFrame):
+        symbol = data['Symbol'][0]
+        base = declarative_base()
+        # using 'Pct' instead of '%' since Postgres doesn't allow that
+        df = data.rename(columns={'% Dly Qt to Traded Qty':'Pct Dly Qt to Traded Qty'})
+        # df.to_sql(symbol, self.engine, index=False)
+        attr_dict = {		
+                '__tablename__': symbol,
+                'id': Column(Integer, primary_key = True), 
+                'Symbol': Column(String), 
+                'Series': Column(String), 
+                'Date': Column(String), 
+                'Prev Close': Column(String), 
+                'Open Price': Column(String), 
+                'High Price': Column(String), 
+                'Low Price': Column(String),
+                'Last Price': Column(String),
+                'Close Price': Column(String),
+                'Average Price': Column(String),
+                'Total Traded Quantity': Column(String),
+                'Turnover': Column(String),
+                'No. of Trades': Column(String),
+                'Deliverable Qty': Column(String),
+                # using 'Pct' instead of '%' since Postgres doesn't allow that
+                'Pct Dly Qt to Traded Qty': Column(String)
+            }
+        try:
+            TableInstance = type(symbol, (base,), attr_dict)
+        except InvalidRequestError:
+            Logger.err('Table instance already in memory: ', symbol)
 
+        all_data = [TableInstance(**row_dict) for row_dict in df.to_dict(orient='rows')]
+        self.session.bulk_save_objects(all_data)
+        self.session.commit()
         
