@@ -16,6 +16,7 @@ class Config:
     MONGO_DB = 'nse_api'
     MONGO_AUTH_DB = os.getenv('MONGO_AUTH_DB')
     MONGO_CONNECTION_STRING = os.getenv('MONGO_CONNECTION_STRING') + '/'
+    # TODO: Make DB name come from env
     POSTGRES_DB='NseSecurityHistorical'
     POSTGRES_CONNECTION_STRING = os.getenv('POSTGRES_CONNECTION_STRING') + '/' + POSTGRES_DB
     CONNECTION_ALIAS = 'nse_api'
