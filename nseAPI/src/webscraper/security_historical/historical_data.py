@@ -59,8 +59,7 @@ class HistoricalData:
                 Logger.err('Table exists: ', symbol)
             
     # TODO: Make it add only the new data when run on daily basis
-    def upsert_data(self, data: pd.DataFrame):
-        symbol = data['Symbol'][0]
+    def upsert_data(self, data: pd.DataFrame, symbol: str):
         base = declarative_base()
         # using 'Pct' instead of '%' since Postgres doesn't allow that
         df = data.rename(columns={'% Dly Qt to Traded Qty':'Pct Dly Qt to Traded Qty'})
@@ -91,6 +90,11 @@ class HistoricalData:
             Logger.err('Table instance already in memory: ', symbol)
 
         all_data = [TableInstance(**row_dict) for row_dict in df.to_dict(orient='rows')]
-        self.session.bulk_save_objects(all_data)
-        self.session.commit()
+        try:
+            self.session.bulk_save_objects(all_data)
+            self.session.commit()
+        except ProgrammingError:
+            self.create_table_for_securities([symbol])
+            self.session.bulk_save_objects(all_data)
+            self.session.commit()
         
