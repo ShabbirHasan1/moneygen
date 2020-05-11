@@ -8,6 +8,8 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import *
 from util.log import Logger
+import sys
+import traceback
 
 
 class HistoricalData:
@@ -24,7 +26,13 @@ class HistoricalData:
         url = f"https://www1.nseindia.com/products/dynaContent/common/productsSymbolMapping.jsp?symbol={security_symbol}&segmentLink=3&symbolCount=2&series={self.series}&dateRange={self.date_range}&fromDate=&toDate=&dataType=PRICEVOLUMEDELIVERABLE"
         res = requests.get(url, headers=Config.NSE_HEADERS)
         soup = BeautifulSoup(res.content, 'html.parser')
-        data_stream = StringIO(soup.find(id='csvContentDiv').get_text())
+        try:
+            data_stream = StringIO(soup.find(id='csvContentDiv').get_text())
+        except BaseException as ex:
+            Logger.err('Problem occured: '+ str(ex), push_to_slack=True)
+            traceback.print_exc(3, file=sys.stdout)
+            sys.exit()
+
         df = pd.read_csv(data_stream, lineterminator=':')
         return df
 
